@@ -1,0 +1,50 @@
+:root {
+  --main-color: #00aeef;
+  --transition: 0.5s;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+body {
+  font-family: 'Poppins', sans-serif !important;
+  padding-right: 0 !important;
+  overflow: auto !important;
+}
+
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #EEEEEE;
+  border-radius: 25px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #00aeef4a;
+  border-radius: 25px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--main-color);
+}
