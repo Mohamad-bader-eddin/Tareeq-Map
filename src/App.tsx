@@ -33,11 +33,14 @@ function App() {
           <Route
             path="/"
             element={
-              <Navigate to="/dashboard/coverage/add-polygons" replace={true} />
+              <Navigate
+                to="/dashboard/coverage/add-polygons-map"
+                replace={true}
+              />
             }
           />
           <Route
-            path="/dashboard/coverage/add-polygons"
+            path="/dashboard/coverage/add-polygons-map"
             element={<AddPolygonsContainer />}
           />
         </Routes>
