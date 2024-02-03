@@ -28,8 +28,6 @@ function App() {
     };
   }, [setDarkMode]);
 
-  console.log(jsCookie.get("accessToken"));
-
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
