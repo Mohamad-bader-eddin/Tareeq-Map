@@ -6,6 +6,7 @@ import { useDarkMode } from "./context/DarkMode";
 import { CssBaseline } from "@mui/material";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
+import OrderTrackContainer from "./pages/orderTrack/container/OrderTrackContainer";
 
 const queryClient = new QueryClient();
 function App() {
@@ -33,15 +34,16 @@ function App() {
           <Route
             path="/"
             element={
-              <Navigate
-                to="/dashboard/coverage/add-polygons-map"
-                replace={true}
-              />
+              <Navigate to="/admin/coverage/add-polygons-map" replace={true} />
             }
           />
           <Route
-            path="/dashboard/coverage/add-polygons-map"
+            path="/admin/coverage/add-polygons-map"
             element={<AddPolygonsContainer />}
+          />
+          <Route
+            path="/admin/track-order/:id"
+            element={<OrderTrackContainer />}
           />
         </Routes>
       </ThemeProvider>
