@@ -11,14 +11,13 @@ import jsCookie from "js-cookie";
 
 const queryClient = new QueryClient();
 function App() {
-  console.log(jsCookie.get("accessToken"));
-
   const { setDarkMode } = useDarkMode();
   useEffect(() => {
     // Listen for messages from the parent window
     const handleMessage = (event: MessageEvent) => {
-      const { darkMode } = event.data;
+      const { darkMode, token } = event.data;
       setDarkMode(darkMode);
+      jsCookie.set("accessToken", token);
     };
 
     window.addEventListener("message", handleMessage);
