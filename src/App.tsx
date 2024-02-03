@@ -17,8 +17,9 @@ function App() {
   useEffect(() => {
     // Listen for messages from the parent window
     const handleMessage = (event: MessageEvent) => {
-      const { darkMode } = event.data;
-      console.log(event.data);
+      const { darkMode, token } = event.data;
+      console.log(token);
+      console.log(darkMode);
 
       setDarkMode(darkMode);
     };
