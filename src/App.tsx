@@ -7,7 +7,6 @@ import { CssBaseline } from "@mui/material";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import OrderTrackContainer from "./pages/orderTrack/container/OrderTrackContainer";
-import jsCookie from "js-cookie";
 
 const queryClient = new QueryClient();
 function App() {
@@ -15,10 +14,7 @@ function App() {
   useEffect(() => {
     // Listen for messages from the parent window
     const handleMessage = (event: MessageEvent) => {
-      const { darkMode, token } = event.data;
-      console.log(token);
-      console.log(darkMode);
-      jsCookie.set("accessToken", token);
+      const { darkMode } = event.data;
       setDarkMode(darkMode);
     };
 
