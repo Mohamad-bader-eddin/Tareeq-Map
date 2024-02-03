@@ -8,6 +8,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import OrderTrackContainer from "./pages/orderTrack/container/OrderTrackContainer";
 import jsCookie from "js-cookie";
+import InfoPolygonsContainer from "./pages/polygons/views/infoPolygons/container/InfoPolygonsContainer";
 
 const queryClient = new QueryClient();
 function App() {
@@ -42,6 +43,10 @@ function App() {
           <Route
             path="/admin/coverage/add-polygons-map"
             element={<AddPolygonsContainer />}
+          />
+          <Route
+            path="/admin/coverage/polygons/:id"
+            element={<InfoPolygonsContainer />}
           />
           <Route
             path="/admin/track-order/:id"

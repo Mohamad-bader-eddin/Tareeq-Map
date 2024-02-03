@@ -1,13 +1,25 @@
 import { GoogleMap, LoadScript, Marker, Polygon } from "@react-google-maps/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormikProps } from "formik";
-import { Location, Markers } from "../types/AddPolygonsFormType";
+import { Location, Markers } from "../../addPolygons/types/AddPolygonsFormType";
 
-const PolygonsMap = <T extends Record<string, unknown>>({
+const UpdatePolygonsMap = <T extends Record<string, unknown>>({
   formik,
 }: PolygonsMapProps<T>) => {
   const [selectedMarkers, setSelectedMarkers] = useState<Markers[]>([]);
-  const locations: Location[] = [];
+  const oldLocations: Location[] = formik.values["locations"] as Location[];
+
+  useEffect(() => {
+    const markers: Markers[] = oldLocations.map((mark) => ({
+      id: mark.id as string,
+      position: {
+        lat: mark.latitude,
+        lng: mark.longitude,
+      },
+    }));
+    setSelectedMarkers([...markers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleMapClick = (e: google.maps.MapMouseEvent) => {
     // Update the selectedLocation state when the map is clicked
@@ -21,23 +33,30 @@ const PolygonsMap = <T extends Record<string, unknown>>({
         },
       },
     ]);
-    selectedMarkers.forEach((loc) =>
-      locations.push({
-        latitude: loc.position.lat,
-        longitude: loc.position.lng,
-      })
-    );
-    locations.push({
+    // selectedMarkers.forEach((loc) =>
+    //   locations.push({
+    //     latitude: loc.position.lat,
+    //     longitude: loc.position.lng,
+    //   })
+    // );
+    oldLocations.push({
       latitude: e.latLng?.lat() as number,
       longitude: e.latLng?.lng() as number,
     });
-    formik.setFieldValue("locations", locations);
+
+    formik.setFieldValue("locations", oldLocations);
   };
 
   const handleMarkerClick = (position: google.maps.LatLngLiteral) => {
     const point = selectedMarkers.findIndex((el) => el.position === position);
     selectedMarkers.splice(point, 1);
     setSelectedMarkers([...selectedMarkers]);
+    const oldPoint = oldLocations.findIndex(
+      (x) => x.latitude === position.lat && x.longitude === position.lng
+    );
+    if (oldPoint >= 0) {
+      oldLocations.splice(oldPoint, 1);
+    }
   };
 
   return (
@@ -74,4 +93,4 @@ type PolygonsMapProps<T> = {
   formik: FormikProps<T>;
 };
 
-export default PolygonsMap;
+export default UpdatePolygonsMap;

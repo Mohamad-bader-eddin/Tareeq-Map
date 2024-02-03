@@ -8,8 +8,10 @@ type Option = {
 };
 
 export type Location = {
+    id?: string;
     latitude: number;
     longitude: number;
+    zone_id?: string;
 }
 
 export type initialValuesType = {
@@ -58,6 +60,6 @@ export type AddPolygonsFormError = {
 }
 
 export type Markers = {
-    id: number;
+    id: string;
     position: google.maps.LatLngLiteral;
 };

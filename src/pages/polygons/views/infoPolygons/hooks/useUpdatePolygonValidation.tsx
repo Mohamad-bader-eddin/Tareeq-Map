@@ -1,18 +1,40 @@
 import * as Yup from "yup";
 import { FormikHelpers } from "formik";
-import { Location, initialValuesType } from "../types/AddPolygonsFormType";
 import { useState } from "react";
-import useAddPolugonQuery from "./useAddPolugonQuery";
+import {
+  Location,
+  initialValuesType,
+} from "../../addPolygons/types/AddPolygonsFormType";
+import useUpdatePolygonQuery from "./useUpdatePolygonQuery";
+import { Zone } from "../../addPolygons/types/PolygonsTypes";
 
-const useAddPolygonValidation = () => {
+const useUpdatePolygonValidation = ({
+  data,
+  id,
+}: {
+  data: Zone;
+  id: string;
+}) => {
   const [openError, setOpenError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [openSucsses, setOpenSucsses] = useState(false);
   const [msg, setMsg] = useState("");
-  const { mutate } = useAddPolugonQuery();
+  const { mutate } = useUpdatePolygonQuery(id);
+  const points: Location[] = [];
+  data?.polygons.forEach((el) =>
+    points.push({
+      id: el.id,
+      latitude: el.lat,
+      longitude: el.long,
+      zone_id: el.zone_id,
+    })
+  );
   const initialValues: initialValuesType = {
-    zone: null,
-    locations: [{} as Location],
+    zone: {
+      id: data?.id,
+      name: data?.name,
+    },
+    locations: points,
   };
 
   const validationSchema = Yup.object().shape({
@@ -42,7 +64,6 @@ const useAddPolygonValidation = () => {
           setOpenSucsses(true);
           setMsg(response.data.message);
           formikHelpers.setSubmitting(false);
-          formikHelpers.resetForm();
         },
         onError: (error) => {
           const err = error as Error;
@@ -52,7 +73,6 @@ const useAddPolygonValidation = () => {
         },
       }
     );
-    formikHelpers.resetForm();
   };
   return {
     initialValues,
@@ -67,4 +87,4 @@ const useAddPolygonValidation = () => {
   };
 };
 
-export default useAddPolygonValidation;
+export default useUpdatePolygonValidation;
