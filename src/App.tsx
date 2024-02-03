@@ -16,7 +16,6 @@ function App() {
     const handleMessage = (event: MessageEvent) => {
       const { darkMode } = event.data;
       setDarkMode(darkMode);
-      console.log("Received token:", darkMode);
     };
 
     window.addEventListener("message", handleMessage);
