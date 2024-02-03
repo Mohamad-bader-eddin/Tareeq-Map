@@ -7,9 +7,12 @@ import { CssBaseline } from "@mui/material";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import OrderTrackContainer from "./pages/orderTrack/container/OrderTrackContainer";
+import jsCookie from "js-cookie";
 
 const queryClient = new QueryClient();
 function App() {
+  console.log(jsCookie.get("accessToken"));
+
   const { setDarkMode } = useDarkMode();
   useEffect(() => {
     // Listen for messages from the parent window
