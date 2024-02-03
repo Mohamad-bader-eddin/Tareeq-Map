@@ -14,7 +14,9 @@ axiosInstance.interceptors.request.use((config) => {
   const token = jsCookie.get("accessToken");
 
   if (token) {
-    config.headers["Authorization"] = `Bearer ${token}`;
+    config.headers[
+      "Authorization"
+    ] = `Bearer 195|LNXDj9yoibG2xSzRIbVprrfGHlCuhBK3gOaNH0qPe38ca804`;
   }
   return config;
 });
