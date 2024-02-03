@@ -18,6 +18,8 @@ function App() {
     // Listen for messages from the parent window
     const handleMessage = (event: MessageEvent) => {
       const { darkMode } = event.data;
+      console.log(event.data);
+
       setDarkMode(darkMode);
     };
 
