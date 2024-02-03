@@ -27,6 +27,9 @@ function App() {
       window.removeEventListener("message", handleMessage);
     };
   }, [setDarkMode]);
+
+  console.log(jsCookie.get("accessToken"));
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
