@@ -7,24 +7,11 @@ import { CssBaseline } from "@mui/material";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import OrderTrackContainer from "./pages/orderTrack/container/OrderTrackContainer";
-
-function getCookie(cookieName: string) {
-  const name = cookieName + "=";
-  const decodedCookie = decodeURIComponent(document.cookie);
-  const cookieArray = decodedCookie.split(";");
-
-  for (let i = 0; i < cookieArray.length; i++) {
-    const cookie = cookieArray[i].trim();
-    if (cookie.indexOf(name) === 0) {
-      return cookie.substring(name.length, cookie.length);
-    }
-  }
-  return null; // Cookie not found
-}
+import jsCookie from "js-cookie";
 
 const queryClient = new QueryClient();
 function App() {
-  console.log(getCookie("accessToken"));
+  console.log(jsCookie.get("accessToken"));
 
   const { setDarkMode } = useDarkMode();
   useEffect(() => {
