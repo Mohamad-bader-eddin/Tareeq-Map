@@ -1,11 +1,13 @@
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import TrackMap from "../components/TrackMap";
 import useOrderQuery from "../hooks/useOrderQuery";
 import { Backdrop } from "@mui/material";
 import Spinner from "../../../share/Spinner";
 
 const OrderTrackContainer = () => {
-  const { id } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id");
   const { data, isLoading } = useOrderQuery(id as string);
   return (
     <>

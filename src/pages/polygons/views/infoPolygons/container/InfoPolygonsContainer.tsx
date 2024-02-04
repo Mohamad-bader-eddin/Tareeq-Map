@@ -4,13 +4,16 @@ import { theme } from "../../../../../share/utils/theme";
 import { useDarkMode } from "../../../../../context/DarkMode";
 import useUpdatePolygonValidation from "../hooks/useUpdatePolygonValidation";
 import usePolygonQuery from "../hooks/usePolygonQuery";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import UpdatPolygonsForm from "../components/UpdatPolygonsForm";
 import Spinner from "../../../../../share/Spinner";
 
 const InfoPolygonsContainer = () => {
   const { darkMode } = useDarkMode();
-  const { id } = useParams();
+  // const { id } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id");
   const { data, isLoading } = usePolygonQuery(id as string);
   const {
     initialValues,
