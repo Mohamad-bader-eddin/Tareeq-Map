@@ -23,6 +23,7 @@ const AddPolygonsContainer = () => {
     <Box
       sx={{
         background: darkMode ? theme.dark.sidebar : theme.light.sidebar,
+        paddingBlock: "20px",
       }}
     >
       <AddPolygonsForm

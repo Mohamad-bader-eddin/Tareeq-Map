@@ -32,7 +32,7 @@ const UpdatPolygonsForm = ({
             />
             <UpdatePolygonsMap formik={formik} />
             <SubmitButton
-              name={"edit"}
+              name={"Edit"}
               disabled={!formik.isValid || formik.isSubmitting}
             />
           </Form>
