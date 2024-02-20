@@ -43,13 +43,10 @@ function App() {
             element={<AddPolygonsContainer />}
           />
           <Route
-            path="/admin/coverage/polygons/:id"
+            path="/admin/coverage/polygons"
             element={<InfoPolygonsContainer />}
           />
-          <Route
-            path="/admin/track-order/:id"
-            element={<OrderTrackContainer />}
-          />
+          <Route path="/admin/track-order" element={<OrderTrackContainer />} />
         </Routes>
       </ThemeProvider>
     </QueryClientProvider>
