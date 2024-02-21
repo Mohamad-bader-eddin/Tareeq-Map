@@ -8,6 +8,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import OrderTrackContainer from "./pages/orderTrack/container/OrderTrackContainer";
 import InfoPolygonsContainer from "./pages/polygons/views/infoPolygons/container/InfoPolygonsContainer";
+import CourierOnDemandContainer from "./pages/createNewOrder/container/CourierOnDemandContainer";
 
 const queryClient = new QueryClient();
 function App() {
@@ -47,6 +48,10 @@ function App() {
             element={<InfoPolygonsContainer />}
           />
           <Route path="/admin/track-order" element={<OrderTrackContainer />} />
+          <Route
+            path="/admin/create-order"
+            element={<CourierOnDemandContainer />}
+          />
         </Routes>
       </ThemeProvider>
     </QueryClientProvider>
