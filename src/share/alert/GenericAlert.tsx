@@ -20,8 +20,8 @@ const GenericAlert = ({
     <Snackbar
       open={open}
       anchorOrigin={{
-        horizontal: "left",
-        vertical: vertical ? "top" : "bottom",
+        horizontal: vertical ? "center" : "left",
+        vertical: "bottom",
       }}
       autoHideDuration={6000}
       onClose={() => setOpen(false)}
