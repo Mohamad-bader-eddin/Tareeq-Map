@@ -17,7 +17,7 @@ const useCourierOnDemandValidation = ({
   const [msg, setMsg] = useState("");
   const { mutate } = useAddOrderQuery();
   const initialValues = {
-    sendToActiveOrders: false,
+    sendToActiveOrders: "false",
     vehicleType: null,
   };
 
@@ -36,7 +36,7 @@ const useCourierOnDemandValidation = ({
   ) => {
     mutate(
       {
-        is_schedule: values.sendToActiveOrders as boolean,
+        is_schedule: values.sendToActiveOrders === "true" ? true : false,
         vehicle_type_id: values.vehicleType?.id as string,
         user_id: userId,
         address_points: [
