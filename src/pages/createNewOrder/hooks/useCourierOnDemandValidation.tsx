@@ -17,8 +17,12 @@ const useCourierOnDemandValidation = ({
   const [msg, setMsg] = useState("");
   const { mutate } = useAddOrderQuery();
   const initialValues = {
-    sendToActiveOrders: "false",
+    sendToActiveOrders: {
+      id: "false",
+      name: "now",
+    },
     vehicleType: null,
+    order_date: null,
   };
 
   const validationSchema = Yup.object().shape({
@@ -36,8 +40,14 @@ const useCourierOnDemandValidation = ({
   ) => {
     mutate(
       {
-        is_schedule: values.sendToActiveOrders === "true" ? true : false,
+        is_schedule: values.sendToActiveOrders?.id === "true" ? true : false,
         vehicle_type_id: values.vehicleType?.id as string,
+        // order_date: values.order_date?.toLocaleTimeString("en-uk", {
+        //   hour: "2-digit",
+        //   minute: "2-digit",
+        //   second: "2-digit",
+        //   // hourCycle: "h11",
+        // }) as string,
         user_id: userId,
         address_points: [
           {

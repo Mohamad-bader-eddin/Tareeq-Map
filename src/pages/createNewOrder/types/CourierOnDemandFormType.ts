@@ -10,7 +10,8 @@ type Option = {
 
 export type initialValuesType = {
     vehicleType: Option | null;
-    sendToActiveOrders?: string;
+    sendToActiveOrders?: Option | null;
+    order_date?: Date | null
 }
 
 export type validationSchemaType = Yup.ObjectSchema<{

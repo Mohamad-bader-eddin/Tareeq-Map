@@ -11,6 +11,7 @@ export type NewOreder = {
     is_schedule: boolean;
     vehicle_type_id: string;
     user_id: string;
+    order_date?: string;
     address_points: AddressPoint[];
 }
 

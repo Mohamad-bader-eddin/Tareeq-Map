@@ -2,13 +2,13 @@ import { Form, Formik } from "formik";
 import { CourierOnDemandFormType } from "../types/CourierOnDemandFormType";
 import { Box } from "@mui/material";
 import SubmitButton from "../../../share/submitButton/SubmitButton";
-import SelectInput from "../../../share/select/SelectInput";
 import CreateOrderMap from "./CreateOrderMap";
 import { useState } from "react";
 import SearchLocation from "./SearchLocation";
 import AutocompleteInput from "../../../share/autoComplete/AutocompleteInput";
 import useVehiclesQuery from "../../../share/hooks/useVehiclesQuery";
 import useVehiclesMapper from "../../../share/hooks/useVehiclesMapper";
+import TimeInput from "../../../share/time/TimeInput";
 const CourierOnDemandForm = ({
   initialValues,
   onSubmit,
@@ -32,12 +32,12 @@ const CourierOnDemandForm = ({
 
   const options = [
     {
-      value: "true",
-      key: "schedule",
+      id: "true",
+      name: "schedule",
     },
     {
-      value: "false",
-      key: "now",
+      id: "false",
+      name: "now",
     },
   ];
 
@@ -74,12 +74,16 @@ const CourierOnDemandForm = ({
                 setIsValid={setIsValidDestinationLocation}
               />
             </Box>
-            <SelectInput
+            <AutocompleteInput
               formik={formik}
               label={"Send To Active Orders"}
               name="sendToActiveOrders"
               options={options}
+              loading={false}
             />
+            {formik.values.sendToActiveOrders?.id === "true" && (
+              <TimeInput formik={formik} label="Order Time" name="order_date" />
+            )}
             <AutocompleteInput
               formik={formik}
               label={"Vehicle Type"}
