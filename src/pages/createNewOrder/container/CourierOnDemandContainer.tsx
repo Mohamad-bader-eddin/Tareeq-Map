@@ -5,6 +5,7 @@ import { Pin } from "../types/createOrderType";
 import { Option } from "../types/optionsLocationsType";
 import GenericAlert from "../../../share/alert/GenericAlert";
 import { useLocation } from "react-router-dom";
+import { Box } from "@mui/material";
 
 const CourierOnDemandContainer = () => {
   const location = useLocation();
@@ -33,7 +34,7 @@ const CourierOnDemandContainer = () => {
   });
 
   return (
-    <>
+    <Box sx={{ paddingBlock: "20px" }}>
       <CourierOnDemandForm
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -59,7 +60,7 @@ const CourierOnDemandContainer = () => {
         type="error"
         msg={errorMsg}
       />
-    </>
+    </Box>
   );
 };
 export default CourierOnDemandContainer;

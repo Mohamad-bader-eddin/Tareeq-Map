@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-export const errorMessage = (error) => {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+export const errorMessage = (error: any) => {
     return error.response.data.message as string
 }
