@@ -9,10 +9,20 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const GenericAlert = ({ open, setOpen, type, msg }: GenericAlertProps) => {
+const GenericAlert = ({
+  open,
+  setOpen,
+  type,
+  msg,
+  vertical,
+}: GenericAlertProps) => {
   return (
     <Snackbar
       open={open}
+      anchorOrigin={{
+        horizontal: "left",
+        vertical: vertical ? "top" : "bottom",
+      }}
       autoHideDuration={6000}
       onClose={() => setOpen(false)}
     >
@@ -32,6 +42,7 @@ type GenericAlertProps = {
   setOpen: Dispatch<SetStateAction<boolean>>;
   type: "success" | "error" | "warning";
   msg: string;
+  vertical?: boolean;
 };
 
 export default GenericAlert;

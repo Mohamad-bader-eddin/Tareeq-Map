@@ -78,6 +78,7 @@ const CreateOrderMap = ({
         msg="this area outside our service"
         open={openAlert}
         setOpen={setOpenAlert}
+        vertical={true}
       />
     </Box>
   );
