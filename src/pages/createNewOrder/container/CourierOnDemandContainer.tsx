@@ -6,11 +6,14 @@ import { Option } from "../types/optionsLocationsType";
 import GenericAlert from "../../../share/alert/GenericAlert";
 import { useLocation } from "react-router-dom";
 import { Box } from "@mui/material";
+import { useDarkMode } from "../../../context/DarkMode";
+import { theme } from "../../../share/utils/theme";
 
 const CourierOnDemandContainer = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
+  const { darkMode } = useDarkMode();
   const [sourceMarker, setSourceMarker] = useState<Pin>({} as Pin);
   const [destinationMarker, setDestinationMarker] = useState<Pin>({} as Pin);
   const [sourceLocation, setSourceLocation] = useState<Option>({} as Option);
@@ -34,7 +37,12 @@ const CourierOnDemandContainer = () => {
   });
 
   return (
-    <Box sx={{ paddingBlock: "20px" }}>
+    <Box
+      sx={{
+        paddingBlock: "20px",
+        background: darkMode ? theme.dark.sidebar : theme.light.sidebar,
+      }}
+    >
       <CourierOnDemandForm
         initialValues={initialValues}
         validationSchema={validationSchema}
