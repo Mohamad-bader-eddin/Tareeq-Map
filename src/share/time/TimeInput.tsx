@@ -1,8 +1,8 @@
 import { Box, ThemeProvider, createTheme } from "@mui/material";
 import { FormikProps } from "formik";
 import {
+  DateTimePicker,
   LocalizationProvider,
-  MobileTimePicker,
   TimeValidationError,
 } from "@mui/x-date-pickers";
 import { useMemo, useState } from "react";
@@ -60,8 +60,8 @@ const TimeInput = <T extends Record<string, unknown>>({
         }}
       >
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DemoContainer components={["MobileDatePicker"]}>
-            <MobileTimePicker
+          <DemoContainer components={["DateTimePicker", "DateTimePicker"]}>
+            <DateTimePicker
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               onChange={(value: any) => handleSetValue(value as Date)}
               value={formik.values[name]}

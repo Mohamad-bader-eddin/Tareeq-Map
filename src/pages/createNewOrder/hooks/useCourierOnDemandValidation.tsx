@@ -42,12 +42,7 @@ const useCourierOnDemandValidation = ({
       {
         is_schedule: values.sendToActiveOrders?.id === "true" ? true : false,
         vehicle_type_id: values.vehicleType?.id as string,
-        order_date: values?.order_date?.toLocaleTimeString("en-uk", {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          // hourCycle: "h11",
-        }) as string,
+        order_date: values.order_date?.toString(),
         user_id: userId,
         address_points: [
           {
