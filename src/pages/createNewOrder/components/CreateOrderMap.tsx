@@ -2,11 +2,10 @@ import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { Pin } from "../types/createOrderType";
 import { useEffect, useState } from "react";
 import useSearchPointQuery from "../hooks/useSearchPointQuery";
-import { Box } from "@mui/material";
+import { Alert, Box } from "@mui/material";
 import Spinner from "../../../share/Spinner";
 import { getPoint } from "../utils/getPoint";
 import usePointValidateQuery from "../hooks/usePointValidateQuery";
-import GenericAlert from "../../../share/alert/GenericAlert";
 
 const CreateOrderMap = ({
   marker,
@@ -34,6 +33,7 @@ const CreateOrderMap = ({
             setOpenAlert(true);
           } else {
             setIsValid(false);
+            setOpenAlert(false);
           }
         },
       }
@@ -73,13 +73,15 @@ const CreateOrderMap = ({
           <Marker position={marker.position} />
         </GoogleMap>
       </LoadScript>
-      <GenericAlert
-        type="error"
-        msg="this area outside our service"
-        open={openAlert}
-        setOpen={setOpenAlert}
-        vertical={true}
-      />
+      {openAlert ? (
+        <Alert
+          sx={{ position: "absolute", width: "250px", bottom: "10px" }}
+          variant="filled"
+          severity="error"
+        >
+          this area outside our service
+        </Alert>
+      ) : null}
     </Box>
   );
 };
