@@ -5,6 +5,7 @@ import { Pin } from "../types/createOrderType";
 import { useState } from "react";
 import useAddOrderQuery from "./useAddOrderQuery";
 import { errorMessage } from "../../../share/utils/getErrorMessage";
+import { format } from "date-fns";
 
 const useCourierOnDemandValidation = ({
   destinationMarker,
@@ -42,7 +43,7 @@ const useCourierOnDemandValidation = ({
       {
         is_schedule: values.sendToActiveOrders?.id === "true" ? true : false,
         vehicle_type_id: values.vehicleType?.id as string,
-        order_date: values.order_date?.toString(),
+        order_date: format(values?.order_date as Date, "dd/MM/yyyy HH:mm:ss"),
         user_id: userId,
         address_points: [
           {
