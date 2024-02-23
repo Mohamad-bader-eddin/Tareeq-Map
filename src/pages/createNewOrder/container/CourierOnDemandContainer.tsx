@@ -40,6 +40,7 @@ const CourierOnDemandContainer = () => {
     <Box
       sx={{
         paddingBlock: "20px",
+        paddingInline: "10px",
         background: darkMode ? theme.dark.sidebar : theme.light.sidebar,
       }}
     >
