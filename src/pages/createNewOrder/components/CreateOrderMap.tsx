@@ -28,7 +28,7 @@ const CreateOrderMap = ({
       { lat: e.latLng?.lat() as number, long: e.latLng?.lng() as number },
       {
         onSuccess: (response) => {
-          if (response?.data === "outside") {
+          if (response?.data.content.status === false) {
             setIsValid(true);
             setOpenAlert(true);
           } else {
