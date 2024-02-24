@@ -43,7 +43,9 @@ const useCourierOnDemandValidation = ({
       {
         is_schedule: values.sendToActiveOrders?.id === "true" ? true : false,
         vehicle_type_id: values.vehicleType?.id as string,
-        order_date: format(values?.order_date as Date, "yyyy-MM-dd HH:mm:ss"),
+        order_date: values?.order_date
+          ? format(values?.order_date as Date, "yyyy-MM-dd HH:mm:ss")
+          : "",
         user_id: userId,
         address_points: [
           {
