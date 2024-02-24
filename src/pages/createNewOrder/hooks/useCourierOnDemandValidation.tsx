@@ -74,11 +74,7 @@ const useCourierOnDemandValidation = ({
         },
       }
     );
-    console.log("Form Data :", values);
-    console.log(
-      "Form Data :",
-      format(values?.order_date as Date, "yyyy-MM-dd HH:mm:ss")
-    );
+    // console.log("Form Data :", values);
     // formikHelpers.resetForm();
   };
   return {
