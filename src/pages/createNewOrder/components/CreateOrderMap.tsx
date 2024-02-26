@@ -12,6 +12,8 @@ const CreateOrderMap = ({
   setMarker,
   placeId,
   setIsValid,
+  isSet,
+  setIsSet,
 }: CreateOrderMapProps) => {
   const [openAlert, setOpenAlert] = useState(false);
   const { data, refetch, isLoading } = useSearchPointQuery(placeId);
@@ -20,8 +22,15 @@ const CreateOrderMap = ({
     if (placeId) {
       refetch();
     }
-  }, [placeId, refetch]);
+    setIsSet(false);
+  }, [placeId, refetch, setIsSet]);
   const centerPoint = getPoint({ data: data?.data.content });
+  useEffect(() => {
+    if (!isSet && centerPoint) {
+      setIsSet(true);
+      setMarker({ position: { lat: centerPoint.lat, lng: centerPoint.long } });
+    }
+  }, [centerPoint, isSet, setIsSet, setMarker]);
 
   const handleMapClick = (e: google.maps.MapMouseEvent) => {
     mutate(
@@ -91,6 +100,8 @@ type CreateOrderMapProps = {
   setMarker: React.Dispatch<React.SetStateAction<Pin>>;
   placeId: string;
   setIsValid: React.Dispatch<React.SetStateAction<boolean>>;
+  isSet: boolean;
+  setIsSet: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default CreateOrderMap;

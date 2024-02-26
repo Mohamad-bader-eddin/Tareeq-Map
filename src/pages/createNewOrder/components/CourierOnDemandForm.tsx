@@ -23,8 +23,10 @@ const CourierOnDemandForm = ({
   sourceMarker,
 }: CourierOnDemandFormType) => {
   const [isValidSourceLocation, setIsValidSourceLocation] = useState(false);
+  const [isSetSource, setIsSetSource] = useState(false);
   const [isValidDestinationLocation, setIsValidDestinationLocation] =
     useState(false);
+  const [isSetDestination, setIsSetDestination] = useState(false);
   const { data, isLoading } = useVehiclesQuery();
   const { vehiclesOptions } = useVehiclesMapper({
     data: data?.data.content,
@@ -60,6 +62,8 @@ const CourierOnDemandForm = ({
                 setMarker={setSourceMarker}
                 placeId={sourceLocation?.place_id}
                 setIsValid={setIsValidSourceLocation}
+                isSet={isSetSource}
+                setIsSet={setIsSetSource}
               />
             </Box>
             <SearchLocation
@@ -72,6 +76,8 @@ const CourierOnDemandForm = ({
                 setMarker={setDestinationMarker}
                 placeId={destinationLocation?.place_id}
                 setIsValid={setIsValidDestinationLocation}
+                isSet={isSetDestination}
+                setIsSet={setIsSetDestination}
               />
             </Box>
             <AutocompleteInput
