@@ -13,6 +13,8 @@ const CourierOnDemandContainer = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
+  const token = queryParams.get("token");
+  sessionStorage.setItem("token", token as string);
   const { darkMode } = useDarkMode();
   const [sourceMarker, setSourceMarker] = useState<Pin>({} as Pin);
   const [destinationMarker, setDestinationMarker] = useState<Pin>({} as Pin);

@@ -8,6 +8,8 @@ const OrderTrackContainer = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
+  const token = queryParams.get("token");
+  sessionStorage.setItem("token", token as string);
   const { data, isLoading } = useOrderQuery(id as string);
   return (
     <>
