@@ -11,8 +11,6 @@ const AddPolygonsContainer = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const token = queryParams.get("token");
-  console.log("token", token);
-
   jsCookie.set("token", token as string);
   const { darkMode } = useDarkMode();
   const {
@@ -26,6 +24,8 @@ const AddPolygonsContainer = () => {
     openSucsses,
     setOpenSucsses,
   } = useAddPolygonValidation();
+
+  console.log("token", jsCookie.get("token"));
 
   return (
     <Box
