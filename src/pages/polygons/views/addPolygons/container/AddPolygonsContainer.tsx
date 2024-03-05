@@ -5,18 +5,12 @@ import useAddPolygonValidation from "../hooks/useAddPolygonValidation";
 import { theme } from "../../../../../share/utils/theme";
 import { useDarkMode } from "../../../../../context/DarkMode";
 import { useLocation } from "react-router-dom";
-import jsCookie from "js-cookie";
 
 const AddPolygonsContainer = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const token = queryParams.get("token");
-  if (token) {
-    console.log(token);
-    console.log("in");
-
-    jsCookie.set("token", token);
-  }
+  sessionStorage.setItem("token", token as string);
   const { darkMode } = useDarkMode();
   const {
     initialValues,
@@ -30,7 +24,7 @@ const AddPolygonsContainer = () => {
     setOpenSucsses,
   } = useAddPolygonValidation();
 
-  console.log("token", jsCookie.get("token"));
+  console.log("token", sessionStorage.getItem("token"));
 
   return (
     <Box

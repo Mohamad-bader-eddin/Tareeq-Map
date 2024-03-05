@@ -1,5 +1,4 @@
 import axios, { AxiosInstance } from "axios";
-import jsCookie from "js-cookie";
 
 const baseURL = "https://tareeq.sy/dashboard";
 
@@ -11,7 +10,7 @@ const axiosInstance: AxiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use((config) => {
-  const token = jsCookie.get("token");
+  const token = sessionStorage.getItem("token");
   console.log("ini", token);
 
   // config.headers[
