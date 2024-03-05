@@ -11,7 +11,9 @@ const AddPolygonsContainer = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const token = queryParams.get("token");
-  jsCookie.set("token", token as string);
+  if (token) {
+    jsCookie.set("token", token);
+  }
   const { darkMode } = useDarkMode();
   const {
     initialValues,
