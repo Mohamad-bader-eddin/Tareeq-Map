@@ -4,8 +4,14 @@ import AddPolygonsForm from "../components/AddPolygonsForm";
 import useAddPolygonValidation from "../hooks/useAddPolygonValidation";
 import { theme } from "../../../../../share/utils/theme";
 import { useDarkMode } from "../../../../../context/DarkMode";
+import { useLocation } from "react-router-dom";
+import jsCookie from "js-cookie";
 
 const AddPolygonsContainer = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const token = queryParams.get("token");
+  jsCookie.set("token", token as string);
   const { darkMode } = useDarkMode();
   const {
     initialValues,
