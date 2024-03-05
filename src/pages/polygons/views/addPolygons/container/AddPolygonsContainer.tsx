@@ -24,8 +24,6 @@ const AddPolygonsContainer = () => {
     setOpenSucsses,
   } = useAddPolygonValidation();
 
-  console.log("token", sessionStorage.getItem("token"));
-
   return (
     <Box
       sx={{
