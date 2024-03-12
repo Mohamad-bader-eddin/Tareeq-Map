@@ -9,10 +9,12 @@ import { useEffect } from "react";
 import OrderTrackContainer from "./pages/orderTrack/container/OrderTrackContainer";
 import InfoPolygonsContainer from "./pages/polygons/views/infoPolygons/container/InfoPolygonsContainer";
 import CourierOnDemandContainer from "./pages/createNewOrder/container/CourierOnDemandContainer";
+import { useWindowFocused } from "./context/WindowFocused";
 
 const queryClient = new QueryClient();
 function App() {
   const { setDarkMode } = useDarkMode();
+  const { setIsWindowFocused } = useWindowFocused();
   useEffect(() => {
     // Listen for messages from the parent window
     const handleMessage = (event: MessageEvent) => {
@@ -27,6 +29,14 @@ function App() {
       window.removeEventListener("message", handleMessage);
     };
   }, [setDarkMode]);
+
+  window.onfocus = () => {
+    setIsWindowFocused(true);
+  };
+
+  window.onblur = () => {
+    setIsWindowFocused(false);
+  };
 
   return (
     <QueryClientProvider client={queryClient}>

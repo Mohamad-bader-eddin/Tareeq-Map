@@ -4,13 +4,16 @@ import {
   DirectionsService,
   DirectionsRenderer,
 } from "@react-google-maps/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Order } from "../types/order";
+import pusher from "../../../pusherSetup";
+import { useWindowFocused } from "../../../context/WindowFocused";
 
 const TrackMap = ({ data }: { data: Order }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [directions, setDirections] = useState<any>(null); // state to store directions
   const [updateDirections, setUpdateDirections] = useState<boolean>(false);
+  const { isWindowFocused } = useWindowFocused();
 
   // Define your origin and destination coordinates
   const origin = {
@@ -30,6 +33,19 @@ const TrackMap = ({ data }: { data: Order }) => {
       setUpdateDirections(true);
     }
   };
+
+  useEffect(() => {
+    pusher.connect();
+  }, [isWindowFocused]);
+
+  useEffect(() => {
+    const channel = pusher.subscribe("channel-admin");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    channel.bind("order-route-event", (data: any) => {
+      console.log("Received data:", data);
+      // Handle the received data as needed
+    });
+  }, []);
 
   return (
     <LoadScript googleMapsApiKey="AIzaSyCiyuZuf6jsA7mtfN_Q25tGuPEJyh4zTZA">
