@@ -10,6 +10,7 @@ import OrderTrackContainer from "./pages/orderTrack/container/OrderTrackContaine
 import InfoPolygonsContainer from "./pages/polygons/views/infoPolygons/container/InfoPolygonsContainer";
 import CourierOnDemandContainer from "./pages/createNewOrder/container/CourierOnDemandContainer";
 import { useWindowFocused } from "./context/WindowFocused";
+import BirdEyeContainer from "./pages/birdEye/container/BirdEyeContainer";
 
 const queryClient = new QueryClient();
 function App() {
@@ -62,6 +63,7 @@ function App() {
             path="/admin/create-order"
             element={<CourierOnDemandContainer />}
           />
+          <Route path="/admin/bird-eye" element={<BirdEyeContainer />} />
         </Routes>
       </ThemeProvider>
     </QueryClientProvider>
