@@ -7,10 +7,13 @@ import {
 import { BirdEye } from "../types";
 import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
+import { useWindowFocused } from "../../../context/WindowFocused";
+import pusher from "../../../pusherSetup";
 
 const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
   const [selectedMarkers, setSelectedMarkers] = useState<Markers[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<Markers | null>(null);
+  const { isWindowFocused } = useWindowFocused();
   useEffect(() => {
     const markers: Markers[] = data?.map((marker) => ({
       id: marker.id,
@@ -22,6 +25,18 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
     }));
     setSelectedMarkers([...markers]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    pusher.connect();
+  }, [isWindowFocused]);
+
+  useEffect(() => {
+    const channel = pusher.subscribe("channel-admin");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    channel.bind("order-route-event", (data: any) => {
+      console.log("Received data:", data);
+      // Handle the received data as needed
+    });
   }, []);
   return (
     <LoadScript googleMapsApiKey="AIzaSyCiyuZuf6jsA7mtfN_Q25tGuPEJyh4zTZA">
