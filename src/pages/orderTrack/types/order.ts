@@ -26,8 +26,8 @@ export type Driver = {
     phone: string;
     image: null;
     email: null;
-    current_lat: null;
-    current_long: null;
+    current_lat: number;
+    current_long: number;
     availability: boolean;
     driver_profit: number;
     verify_code: null;

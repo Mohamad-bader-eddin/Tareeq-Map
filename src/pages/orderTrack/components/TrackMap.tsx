@@ -3,6 +3,7 @@ import {
   LoadScript,
   DirectionsService,
   DirectionsRenderer,
+  Marker,
 } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import { Order } from "../types/order";
@@ -13,6 +14,7 @@ const TrackMap = ({ data }: { data: Order }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [directions, setDirections] = useState<any>(null); // state to store directions
   const [updateDirections, setUpdateDirections] = useState<boolean>(false);
+  const [marker, setMarker] = useState<Markers | null>(null);
   const { isWindowFocused } = useWindowFocused();
 
   // Define your origin and destination coordinates
@@ -24,6 +26,15 @@ const TrackMap = ({ data }: { data: Order }) => {
     lat: data.order_points[1].lat,
     lng: data.order_points[1].long,
   };
+  if (data.driver) {
+    setMarker({
+      id: data.driver.id,
+      position: {
+        lat: data.driver.current_lat,
+        lng: data.driver.current_long,
+      },
+    });
+  }
 
   // Callback function for the DirectionsService response
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -66,9 +77,23 @@ const TrackMap = ({ data }: { data: Order }) => {
 
         {/* DirectionsRenderer for displaying directions on the map */}
         {directions && <DirectionsRenderer directions={directions} />}
+        {marker && (
+          <Marker
+            position={marker.position}
+            icon={{
+              url: "/images/car.svg",
+            }}
+            zIndex={10}
+          />
+        )}
       </GoogleMap>
     </LoadScript>
   );
+};
+
+type Markers = {
+  id: number;
+  position: google.maps.LatLngLiteral;
 };
 
 export default TrackMap;
