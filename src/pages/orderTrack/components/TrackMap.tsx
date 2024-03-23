@@ -9,12 +9,14 @@ import { useEffect, useState } from "react";
 import { Order } from "../types/order";
 import pusher from "../../../pusherSetup";
 import { useWindowFocused } from "../../../context/WindowFocused";
+import { BirdEyePusher } from "../../birdEye/types";
 
 const TrackMap = ({ data }: { data: Order }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [directions, setDirections] = useState<any>(null); // state to store directions
   const [updateDirections, setUpdateDirections] = useState<boolean>(false);
   const [marker, setMarker] = useState<Markers | null>(null);
+  const [driverMarker, setDriverMarker] = useState<Markers | null>(null);
   const { isWindowFocused } = useWindowFocused();
 
   // Define your origin and destination coordinates
@@ -36,6 +38,16 @@ const TrackMap = ({ data }: { data: Order }) => {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [map, setMap] = useState<any>(null);
+  const [zoom, setZoom] = useState(13);
+  const [center, setCenter] = useState<google.maps.LatLngLiteral>(origin);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onMapLoad = (mapInstance: any) => {
+    setMap(mapInstance);
+  };
+
   // Callback function for the DirectionsService response
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const directionsCallback = (response: any) => {
@@ -51,19 +63,36 @@ const TrackMap = ({ data }: { data: Order }) => {
 
   useEffect(() => {
     const channel = pusher.subscribe("channel-admin");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    channel.bind("order-route-event", (data: any) => {
-      console.log("Received data:", data);
+    channel.bind("bird-eye-event", (data: BirdEyePusher) => {
+      // console.log("Received data:", data);
+      setDriverMarker({
+        id: data.data.id,
+        position: { lat: data.data.lat, lng: data.data.long },
+      });
       // Handle the received data as needed
     });
   }, []);
 
+  useEffect(() => {
+    if (driverMarker && marker) {
+      if (driverMarker.id === marker.id) {
+        setMarker(driverMarker);
+        if (map) {
+          setZoom(map.getZoom());
+          setCenter(map.getCenter());
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [driverMarker]);
+
   return (
     <LoadScript googleMapsApiKey="AIzaSyCiyuZuf6jsA7mtfN_Q25tGuPEJyh4zTZA">
       <GoogleMap
-        zoom={13}
         mapContainerStyle={{ height: "400px", width: "100%" }}
-        center={origin}
+        center={center}
+        onLoad={onMapLoad}
+        zoom={zoom}
       >
         {/* DirectionsService for fetching directions */}
         <DirectionsService
@@ -92,7 +121,7 @@ const TrackMap = ({ data }: { data: Order }) => {
 };
 
 type Markers = {
-  id: number;
+  id: string;
   position: google.maps.LatLngLiteral;
 };
 

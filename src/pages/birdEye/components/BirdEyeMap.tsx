@@ -33,7 +33,7 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
         lat: marker.current_lat,
         lng: marker.current_long,
       },
-      info: marker.name,
+      info: marker.name + " " + marker?.last_name,
     }));
     setSelectedMarkers([...markers]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,7 +48,8 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
       setMovedMarker({
         id: data.data.id,
         position: { lat: data.data.lat, lng: data.data.long },
-        info: data.data.name,
+        info: data.data.name + " " + data.data?.last_name,
+        orderNumber: data.data.order_id,
       });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,11 +82,23 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
             key={marker.id}
             position={marker.position}
             onClick={() => setSelectedMarker(marker)}
+            icon={
+              marker.orderNumber
+                ? {
+                    url: "/images/blueMarker.svg",
+                  }
+                : undefined
+            }
           >
             {selectedMarker?.id === marker.id && (
               <InfoWindow onCloseClick={() => setSelectedMarker(null)}>
                 <Box sx={{ margin: "2px" }}>
                   <Typography variant="body1">{marker.info}</Typography>
+                  {marker.orderNumber ? (
+                    <Typography variant="body1">
+                      Order NO. {marker.orderNumber}
+                    </Typography>
+                  ) : null}
                 </Box>
               </InfoWindow>
             )}
@@ -100,6 +113,7 @@ type Markers = {
   id: string;
   position: google.maps.LatLngLiteral;
   info: string;
+  orderNumber?: number;
 };
 
 export default BirdEyeMap;

@@ -29,7 +29,7 @@ const AutocompleteInput = <T extends Record<string, unknown>>({
       <Box sx={{ mb: "20px" }}>
         <Autocomplete
           loading={loading}
-          freeSolo
+          // freeSolo
           // disableClearable
           value={formik.values[name]}
           options={options}

@@ -21,7 +21,7 @@ export type Order = {
 }
 
 export type Driver = {
-    id: number;
+    id: string;
     name: string;
     phone: string;
     image: null;
