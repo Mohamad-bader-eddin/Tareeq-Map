@@ -5,10 +5,9 @@ import {
   DirectionsRenderer,
   Marker,
 } from "@react-google-maps/api";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Order } from "../types/order";
 import pusher from "../../../pusherSetup";
-import { useWindowFocused } from "../../../context/WindowFocused";
 import { BirdEyePusher } from "../../birdEye/types";
 
 const TrackMap = ({ data }: { data: Order }) => {
@@ -17,26 +16,32 @@ const TrackMap = ({ data }: { data: Order }) => {
   const [updateDirections, setUpdateDirections] = useState<boolean>(false);
   const [marker, setMarker] = useState<Markers | null>(null);
   const [driverMarker, setDriverMarker] = useState<Markers | null>(null);
-  const { isWindowFocused } = useWindowFocused();
+  const [origin, setOrigin] = useState<google.maps.LatLngLiteral>(null!);
+  const [destination, setDestination] = useState<google.maps.LatLngLiteral>(
+    null!
+  );
+  const intervalRef = useRef<number | null>(null);
 
-  // Define your origin and destination coordinates
-  const origin = {
-    lat: data.order_points[0].lat,
-    lng: data.order_points[0].long,
-  };
-  const destination = {
-    lat: data.order_points[1].lat,
-    lng: data.order_points[1].long,
-  };
-  if (data.driver) {
-    setMarker({
-      id: data.driver.id,
-      position: {
-        lat: data.driver.current_lat,
-        lng: data.driver.current_long,
-      },
+  useEffect(() => {
+    // Define your origin and destination coordinates
+    setOrigin({
+      lat: data.order_points[0].lat,
+      lng: data.order_points[0].long,
     });
-  }
+    setDestination({
+      lat: data.order_points[1].lat,
+      lng: data.order_points[1].long,
+    });
+    if (data.driver) {
+      setMarker({
+        id: data.driver.id,
+        position: {
+          lat: data.driver.current_lat,
+          lng: data.driver.current_long,
+        },
+      });
+    }
+  }, [data]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [map, setMap] = useState<any>(null);
@@ -57,9 +62,20 @@ const TrackMap = ({ data }: { data: Order }) => {
     }
   };
 
+  const stopTimer = () => {
+    if (intervalRef.current) {
+      window.clearInterval(intervalRef.current);
+    }
+  };
+
   useEffect(() => {
-    pusher.connect();
-  }, [isWindowFocused]);
+    intervalRef.current = window.setInterval(() => {
+      if (pusher.connection.state !== "connected") pusher.connect();
+    }, 5000);
+    return () => {
+      stopTimer();
+    };
+  }, []);
 
   useEffect(() => {
     const channel = pusher.subscribe("channel-admin");
