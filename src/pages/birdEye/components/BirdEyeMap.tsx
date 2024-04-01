@@ -5,16 +5,15 @@ import {
   Marker,
 } from "@react-google-maps/api";
 import { BirdEye, BirdEyePusher } from "../types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box, Typography } from "@mui/material";
-import { useWindowFocused } from "../../../context/WindowFocused";
 import pusher from "../../../pusherSetup";
 
 const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
   const [selectedMarkers, setSelectedMarkers] = useState<Markers[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<Markers | null>(null);
   const [movedMarker, setMovedMarker] = useState<Markers | null>(null);
-  const { isWindowFocused } = useWindowFocused();
+  const intervalRef = useRef<number | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [map, setMap] = useState<any>(null);
   const [zoom, setZoom] = useState(13);
@@ -38,9 +37,21 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
     setSelectedMarkers([...markers]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const stopTimer = () => {
+    if (intervalRef.current) {
+      window.clearInterval(intervalRef.current);
+    }
+  };
+
   useEffect(() => {
-    pusher.connect();
-  }, [isWindowFocused]);
+    intervalRef.current = window.setInterval(() => {
+      if (pusher.connection.state !== "connected") pusher.connect();
+    }, 5000);
+    return () => {
+      stopTimer();
+    };
+  }, []);
 
   useEffect(() => {
     const channel = pusher.subscribe("channel-admin");
