@@ -11,6 +11,8 @@ const useCourierOnDemandValidation = ({
   destinationMarker,
   sourceMarker,
   userId,
+  destinationAddress,
+  sourceAddress,
 }: useCourierOnDemandValidationProps) => {
   const [openError, setOpenError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -49,14 +51,14 @@ const useCourierOnDemandValidation = ({
         user_id: userId,
         address_points: [
           {
-            name: "Damascus",
-            address: "Damascus",
+            name: sourceAddress,
+            address: sourceAddress,
             lat: sourceMarker.position.lat,
             long: sourceMarker.position.lng,
           },
           {
-            name: "Damascus",
-            address: "Damascus",
+            name: destinationAddress,
+            address: destinationAddress,
             lat: destinationMarker.position.lat,
             long: destinationMarker.position.lng,
           },
@@ -96,6 +98,8 @@ type useCourierOnDemandValidationProps = {
   sourceMarker: Pin;
   destinationMarker: Pin;
   userId: string;
+  sourceAddress: string;
+  destinationAddress: string;
 };
 
 export default useCourierOnDemandValidation;

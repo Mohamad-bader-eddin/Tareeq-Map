@@ -21,6 +21,8 @@ const CourierOnDemandForm = ({
   setSourceMarker,
   sourceLocation,
   sourceMarker,
+  setDestinationAddress,
+  setSourceAddress,
 }: CourierOnDemandFormType) => {
   const [isValidSourceLocation, setIsValidSourceLocation] = useState(false);
   const [isSetSource, setIsSetSource] = useState(false);
@@ -64,6 +66,7 @@ const CourierOnDemandForm = ({
                 setIsValid={setIsValidSourceLocation}
                 isSet={isSetSource}
                 setIsSet={setIsSetSource}
+                setAddress={setSourceAddress}
               />
             </Box>
             <SearchLocation
@@ -78,6 +81,7 @@ const CourierOnDemandForm = ({
                 setIsValid={setIsValidDestinationLocation}
                 isSet={isSetDestination}
                 setIsSet={setIsSetDestination}
+                setAddress={setDestinationAddress}
               />
             </Box>
             <AutocompleteInput

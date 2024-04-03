@@ -42,4 +42,6 @@ export type CourierOnDemandFormType = {
     setSourceLocation: React.Dispatch<React.SetStateAction<LocationOption>>
     destinationLocation: LocationOption
     setDestinationLocation: React.Dispatch<React.SetStateAction<LocationOption>>
+    setSourceAddress: React.Dispatch<React.SetStateAction<string>>
+    setDestinationAddress: React.Dispatch<React.SetStateAction<string>>
 }

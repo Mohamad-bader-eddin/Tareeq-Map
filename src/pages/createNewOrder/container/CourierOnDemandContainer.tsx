@@ -22,6 +22,8 @@ const CourierOnDemandContainer = () => {
   const [destinationLocation, setDestinationLocation] = useState<Option>(
     {} as Option
   );
+  const [sourceAddress, setSourceAddress] = useState("");
+  const [destinationAddress, setDestinationAddress] = useState("");
   const {
     initialValues,
     validationSchema,
@@ -36,6 +38,8 @@ const CourierOnDemandContainer = () => {
     destinationMarker,
     sourceMarker,
     userId: id as string,
+    sourceAddress,
+    destinationAddress,
   });
 
   return (
@@ -58,6 +62,8 @@ const CourierOnDemandContainer = () => {
         setSourceMarker={setSourceMarker}
         sourceLocation={sourceLocation}
         sourceMarker={sourceMarker}
+        setSourceAddress={setSourceAddress}
+        setDestinationAddress={setDestinationAddress}
       />
       <GenericAlert
         open={openSucsses}

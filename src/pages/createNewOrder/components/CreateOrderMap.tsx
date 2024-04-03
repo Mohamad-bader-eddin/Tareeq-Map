@@ -14,6 +14,7 @@ const CreateOrderMap = ({
   setIsValid,
   isSet,
   setIsSet,
+  setAddress,
 }: CreateOrderMapProps) => {
   const [openAlert, setOpenAlert] = useState(false);
   const { data, refetch, isLoading } = useSearchPointQuery(placeId);
@@ -53,6 +54,20 @@ const CreateOrderMap = ({
         lng: e.latLng?.lng() as number,
       },
     });
+    const geocoder = new window.google.maps.Geocoder();
+
+    geocoder.geocode(
+      { location: e.latLng, language: "ar" },
+      (results, status) => {
+        if (status === "OK") {
+          if (results) {
+            setAddress(results[0].formatted_address);
+            // const address = results[0].formatted_address;
+            // console.log("Address:", address);
+          }
+        }
+      }
+    );
   };
   return (
     <Box sx={{ position: "relative", height: "400px", width: "100%" }}>
@@ -102,6 +117,7 @@ type CreateOrderMapProps = {
   setIsValid: React.Dispatch<React.SetStateAction<boolean>>;
   isSet: boolean;
   setIsSet: React.Dispatch<React.SetStateAction<boolean>>;
+  setAddress: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export default CreateOrderMap;
