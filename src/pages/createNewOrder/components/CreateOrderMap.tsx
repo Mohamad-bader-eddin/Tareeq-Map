@@ -30,8 +30,9 @@ const CreateOrderMap = ({
     if (!isSet && centerPoint) {
       setIsSet(true);
       setMarker({ position: { lat: centerPoint.lat, lng: centerPoint.long } });
+      setAddress(centerPoint.address);
     }
-  }, [centerPoint, isSet, setIsSet, setMarker]);
+  }, [centerPoint, isSet, setAddress, setIsSet, setMarker]);
 
   const handleMapClick = (e: google.maps.MapMouseEvent) => {
     mutate(

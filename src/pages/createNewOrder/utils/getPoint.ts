@@ -1,6 +1,6 @@
 export const getPoint = ({ data }: { data: PointInfo }) => {
     if (data) {
-        return { lat: data.lat, long: data.long }
+        return { lat: data.lat, long: data.long, address: data.address }
     } else return null
 }
 
