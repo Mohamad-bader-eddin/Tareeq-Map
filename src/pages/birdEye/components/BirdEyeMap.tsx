@@ -98,7 +98,9 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
                 ? {
                     url: "/images/blueMarker.svg",
                   }
-                : undefined
+                : {
+                    url: "/images/greenMarker.svg",
+                  }
             }
           >
             {selectedMarker?.id === marker.id && (
