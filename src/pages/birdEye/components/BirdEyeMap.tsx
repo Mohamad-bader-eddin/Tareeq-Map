@@ -33,6 +33,7 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
         lng: marker.current_long,
       },
       info: marker.name + " " + marker?.last_name,
+      orderNumber: marker.order_id,
     }));
     setSelectedMarkers([...markers]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
