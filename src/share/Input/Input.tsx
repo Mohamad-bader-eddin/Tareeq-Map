@@ -46,7 +46,12 @@ const Input = <T extends Record<string, unknown>>({
           multiline={textarea}
           rows={textarea ? 4 : 0}
           variant="outlined"
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            "& input , & label": {
+              fontSize: "14px",
+            },
+          }}
         />
       </Box>
     </ThemeProvider>

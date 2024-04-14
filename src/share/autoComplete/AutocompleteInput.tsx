@@ -52,6 +52,11 @@ const AutocompleteInput = <T extends Record<string, unknown>>({
                   <>{formik.errors[name]}</>
                 ) : null
               }
+              sx={{
+                "& input , & label": {
+                  fontSize: "14px",
+                },
+              }}
               // InputProps={{
               //   ...params.InputProps,
               //   type: "search",

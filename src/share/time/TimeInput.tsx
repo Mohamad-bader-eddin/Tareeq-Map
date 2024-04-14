@@ -57,6 +57,9 @@ const TimeInput = <T extends Record<string, unknown>>({
           "&>div>div": {
             width: "100%",
           },
+          "& input , & label": {
+            fontSize: "14px",
+          },
         }}
       >
         <LocalizationProvider dateAdapter={AdapterDateFns}>
