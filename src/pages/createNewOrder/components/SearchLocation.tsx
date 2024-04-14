@@ -48,7 +48,17 @@ const SearchLocation = ({ label, setValue }: SearchLocationProps) => {
           onInputChange={(_event, newInputValue) => {
             setInputValue(newInputValue);
           }}
-          renderInput={(params) => <TextField {...params} label={label} />}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={label}
+              sx={{
+                "& input , & label": {
+                  fontSize: "14px",
+                },
+              }}
+            />
+          )}
         />
       </Box>
     </ThemeProvider>
