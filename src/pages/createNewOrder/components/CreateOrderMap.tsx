@@ -6,6 +6,7 @@ import { Alert, Box } from "@mui/material";
 import Spinner from "../../../share/Spinner";
 import { getPoint } from "../utils/getPoint";
 import usePointValidateQuery from "../hooks/usePointValidateQuery";
+import { regex } from "../constant";
 
 const CreateOrderMap = ({
   marker,
@@ -19,6 +20,17 @@ const CreateOrderMap = ({
   const [openAlert, setOpenAlert] = useState(false);
   const { data, refetch, isLoading } = useSearchPointQuery(placeId);
   const { mutate, isLoading: isLoadingPoint } = usePointValidateQuery();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [map, setMap] = useState<any>(null);
+  const [zoom, setZoom] = useState(13);
+  const [center, setCenter] = useState<google.maps.LatLngLiteral>({
+    lat: 33.513674,
+    lng: 36.276526,
+  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onMapLoad = (mapInstance: any) => {
+    setMap(mapInstance);
+  };
   useEffect(() => {
     if (placeId) {
       refetch();
@@ -31,7 +43,15 @@ const CreateOrderMap = ({
       setIsSet(true);
       setMarker({ position: { lat: centerPoint.lat, lng: centerPoint.long } });
       setAddress(centerPoint.address);
+      if (map) {
+        setZoom(17);
+        setCenter({
+          lat: centerPoint.lat,
+          lng: centerPoint.long,
+        });
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [centerPoint, isSet, setAddress, setIsSet, setMarker]);
 
   const handleMapClick = (e: google.maps.MapMouseEvent) => {
@@ -62,8 +82,18 @@ const CreateOrderMap = ({
       (results, status) => {
         if (status === "OK") {
           if (results) {
-            setAddress(results[0].formatted_address);
-            // const address = results[0].formatted_address;
+            for (const result of results) {
+              if (!regex.test(result.formatted_address)) {
+                setAddress(result.formatted_address);
+                // console.log(result.formatted_address);
+                break;
+              }
+            }
+            if (map) {
+              setZoom(map.getZoom());
+              setCenter(map.getCenter());
+            }
+            // const address = results[2].formatted_address;
             // console.log("Address:", address);
           }
         }
@@ -87,11 +117,9 @@ const CreateOrderMap = ({
       ) : null}
       <LoadScript googleMapsApiKey="AIzaSyCiyuZuf6jsA7mtfN_Q25tGuPEJyh4zTZA">
         <GoogleMap
-          center={{
-            lat: centerPoint ? centerPoint.lat : 33.513674,
-            lng: centerPoint ? centerPoint.long : 36.276526,
-          }}
-          zoom={centerPoint ? 17 : 13}
+          onLoad={onMapLoad}
+          center={center}
+          zoom={zoom}
           mapContainerStyle={{ height: "400px", width: "100%" }}
           onClick={handleMapClick}
         >
