@@ -32,7 +32,7 @@ const TrackMap = ({ data }: { data: Order }) => {
       lat: data.order_points[1].lat,
       lng: data.order_points[1].long,
     });
-    if (data.driver) {
+    if (data.driver && data.status !== "rejected" && data.status !== "paid") {
       setMarker({
         id: data.driver.id,
         position: {
