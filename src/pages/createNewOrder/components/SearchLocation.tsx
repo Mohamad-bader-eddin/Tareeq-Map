@@ -37,6 +37,7 @@ const SearchLocation = ({ label, setValue }: SearchLocationProps) => {
         <Autocomplete
           loading={isLoading || isFetching}
           freeSolo
+          filterOptions={(options) => options}
           options={options}
           getOptionLabel={(option) => (option as Option).description}
           onChange={(
