@@ -67,6 +67,7 @@ const CourierOnDemandForm = ({
                 isSet={isSetSource}
                 setIsSet={setIsSetSource}
                 setAddress={setSourceAddress}
+                addressFromSearch={sourceLocation?.description}
               />
             </Box>
             <SearchLocation
@@ -82,6 +83,7 @@ const CourierOnDemandForm = ({
                 isSet={isSetDestination}
                 setIsSet={setIsSetDestination}
                 setAddress={setDestinationAddress}
+                addressFromSearch={destinationLocation?.description}
               />
             </Box>
             <AutocompleteInput

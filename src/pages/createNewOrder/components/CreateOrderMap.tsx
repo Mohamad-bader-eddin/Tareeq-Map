@@ -16,6 +16,7 @@ const CreateOrderMap = ({
   isSet,
   setIsSet,
   setAddress,
+  addressFromSearch,
 }: CreateOrderMapProps) => {
   const [openAlert, setOpenAlert] = useState(false);
   const { data, refetch, isLoading } = useSearchPointQuery(placeId);
@@ -42,7 +43,7 @@ const CreateOrderMap = ({
     if (!isSet && centerPoint) {
       setIsSet(true);
       setMarker({ position: { lat: centerPoint.lat, lng: centerPoint.long } });
-      setAddress(centerPoint.address);
+      setAddress(addressFromSearch ? addressFromSearch : centerPoint.address);
       if (map) {
         setZoom(17);
         setCenter({
@@ -147,6 +148,7 @@ type CreateOrderMapProps = {
   isSet: boolean;
   setIsSet: React.Dispatch<React.SetStateAction<boolean>>;
   setAddress: React.Dispatch<React.SetStateAction<string>>;
+  addressFromSearch?: string;
 };
 
 export default CreateOrderMap;
