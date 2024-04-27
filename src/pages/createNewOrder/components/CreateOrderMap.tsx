@@ -42,6 +42,20 @@ const CreateOrderMap = ({
   useEffect(() => {
     if (!isSet && centerPoint) {
       setIsSet(true);
+      mutate(
+        { lat: centerPoint.lat, long: centerPoint.long },
+        {
+          onSuccess: (response) => {
+            if (response?.data.content.status === false) {
+              setIsValid(true);
+              setOpenAlert(true);
+            } else {
+              setIsValid(false);
+              setOpenAlert(false);
+            }
+          },
+        }
+      );
       setMarker({ position: { lat: centerPoint.lat, lng: centerPoint.long } });
       setAddress(addressFromSearch ? addressFromSearch : centerPoint.address);
       if (map) {
