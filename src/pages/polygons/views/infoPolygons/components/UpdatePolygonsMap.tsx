@@ -21,43 +21,43 @@ const UpdatePolygonsMap = <T extends Record<string, unknown>>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleMapClick = (e: google.maps.MapMouseEvent) => {
-    // Update the selectedLocation state when the map is clicked
-    setSelectedMarkers((prev) => [
-      ...prev,
-      {
-        id: String(selectedMarkers.length + 1),
-        position: {
-          lat: e.latLng?.lat() as number,
-          lng: e.latLng?.lng() as number,
-        },
-      },
-    ]);
-    // selectedMarkers.forEach((loc) =>
-    //   locations.push({
-    //     latitude: loc.position.lat,
-    //     longitude: loc.position.lng,
-    //   })
-    // );
-    oldLocations.push({
-      latitude: e.latLng?.lat() as number,
-      longitude: e.latLng?.lng() as number,
-    });
+  // const handleMapClick = (e: google.maps.MapMouseEvent) => {
+  //   // Update the selectedLocation state when the map is clicked
+  //   setSelectedMarkers((prev) => [
+  //     ...prev,
+  //     {
+  //       id: String(selectedMarkers.length + 1),
+  //       position: {
+  //         lat: e.latLng?.lat() as number,
+  //         lng: e.latLng?.lng() as number,
+  //       },
+  //     },
+  //   ]);
+  //   // selectedMarkers.forEach((loc) =>
+  //   //   locations.push({
+  //   //     latitude: loc.position.lat,
+  //   //     longitude: loc.position.lng,
+  //   //   })
+  //   // );
+  //   oldLocations.push({
+  //     latitude: e.latLng?.lat() as number,
+  //     longitude: e.latLng?.lng() as number,
+  //   });
 
-    formik.setFieldValue("locations", oldLocations);
-  };
+  //   formik.setFieldValue("locations", oldLocations);
+  // };
 
-  const handleMarkerClick = (position: google.maps.LatLngLiteral) => {
-    const point = selectedMarkers.findIndex((el) => el.position === position);
-    selectedMarkers.splice(point, 1);
-    setSelectedMarkers([...selectedMarkers]);
-    const oldPoint = oldLocations.findIndex(
-      (x) => x.latitude === position.lat && x.longitude === position.lng
-    );
-    if (oldPoint >= 0) {
-      oldLocations.splice(oldPoint, 1);
-    }
-  };
+  // const handleMarkerClick = (position: google.maps.LatLngLiteral) => {
+  //   const point = selectedMarkers.findIndex((el) => el.position === position);
+  //   selectedMarkers.splice(point, 1);
+  //   setSelectedMarkers([...selectedMarkers]);
+  //   const oldPoint = oldLocations.findIndex(
+  //     (x) => x.latitude === position.lat && x.longitude === position.lng
+  //   );
+  //   if (oldPoint >= 0) {
+  //     oldLocations.splice(oldPoint, 1);
+  //   }
+  // };
 
   return (
     <LoadScript googleMapsApiKey="AIzaSyCiyuZuf6jsA7mtfN_Q25tGuPEJyh4zTZA">
@@ -65,13 +65,13 @@ const UpdatePolygonsMap = <T extends Record<string, unknown>>({
         center={{ lat: 33.513674, lng: 36.276526 }}
         zoom={13}
         mapContainerStyle={{ height: "400px", width: "100%" }}
-        onClick={handleMapClick}
+        // onClick={handleMapClick}
       >
         {selectedMarkers.map((marker) => (
           <Marker
             key={marker.id}
             position={marker.position}
-            onClick={() => handleMarkerClick(marker.position)}
+            // onClick={() => handleMarkerClick(marker.position)}
           ></Marker>
         ))}
         <Polygon

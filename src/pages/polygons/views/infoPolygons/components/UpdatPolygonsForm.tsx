@@ -1,18 +1,21 @@
 import { Form, Formik } from "formik";
-import useZoneQuery from "../../../../../share/hooks/useZoneQuery";
-import useZoneMaper from "../../../../../share/hooks/useZoneMaper";
-import AutocompleteInput from "../../../../../share/autoComplete/AutocompleteInput";
-import SubmitButton from "../../../../../share/submitButton/SubmitButton";
-import { AddPolygonsFormType } from "../../addPolygons/types/AddPolygonsFormType";
+// import useZoneQuery from "../../../../../share/hooks/useZoneQuery";
+// import useZoneMaper from "../../../../../share/hooks/useZoneMaper";
+// import AutocompleteInput from "../../../../../share/autoComplete/AutocompleteInput";
+// import SubmitButton from "../../../../../share/submitButton/SubmitButton";
+// import { AddPolygonsFormType } from "../../addPolygons/types/AddPolygonsFormType";
 import UpdatePolygonsMap from "./UpdatePolygonsMap";
+// import { Box } from "@mui/material";
+import { UpdatePolygonsFormType } from "../types/UpdatePolygonsFormType";
+// import UploadExcelButton from "./UploadExcelButton";
 
 const UpdatPolygonsForm = ({
   initialValues,
-  onSubmit,
   validationSchema,
-}: AddPolygonsFormType) => {
-  const { data, isLoading } = useZoneQuery();
-  const { options } = useZoneMaper({ data: data?.data.content });
+  onSubmit,
+}: UpdatePolygonsFormType) => {
+  // const { data, isLoading } = useZoneQuery();
+  // const { options } = useZoneMaper({ data: data?.data.content });
 
   return (
     <Formik
@@ -23,18 +26,25 @@ const UpdatPolygonsForm = ({
       {(formik) => {
         return (
           <Form>
-            <AutocompleteInput
+            {/* <AutocompleteInput
               formik={formik}
               label={"Zone"}
               name="zone"
               options={options}
               loading={isLoading}
-            />
+            /> */}
             <UpdatePolygonsMap formik={formik} />
-            <SubmitButton
-              name={"Edit"}
-              disabled={!formik.isValid || formik.isSubmitting}
-            />
+            {/* <UploadExcelButton
+              formik={formik}
+              name="file"
+              title="Upload File"
+            /> */}
+            {/* <Box sx={{ width: "200px" }}>
+              <SubmitButton
+                name={"Edit"}
+                disabled={!formik.isValid || formik.isSubmitting}
+              />
+            </Box> */}
           </Form>
         );
       }}
