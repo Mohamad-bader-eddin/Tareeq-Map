@@ -21,17 +21,43 @@ const TrackMap = ({ data }: { data: Order }) => {
     null!
   );
   const intervalRef = useRef<number | null>(null);
+  const [waypoints, setWaypoints] = useState<google.maps.DirectionsWaypoint[]>(
+    []
+  );
 
   useEffect(() => {
     // Define your origin and destination coordinates
-    setOrigin({
-      lat: data.order_points[0].lat,
-      lng: data.order_points[0].long,
-    });
-    setDestination({
-      lat: data.order_points[1].lat,
-      lng: data.order_points[1].long,
-    });
+    if (data.order_points.length > 2) {
+      setOrigin({
+        lat: data.order_points[0].lat,
+        lng: data.order_points[0].long,
+      });
+      setDestination({
+        lat: data.order_points[data.order_points.length - 1].lat,
+        lng: data.order_points[data.order_points.length - 1].long,
+      });
+      for (let i = 1; i <= data.order_points.length - 2; i++) {
+        setWaypoints((prev) => [
+          ...prev,
+          {
+            location: {
+              lat: data.order_points[i].lat,
+              lng: data.order_points[i].long,
+            },
+            stopover: true,
+          },
+        ]);
+      }
+    } else {
+      setOrigin({
+        lat: data.order_points[0].lat,
+        lng: data.order_points[0].long,
+      });
+      setDestination({
+        lat: data.order_points[1].lat,
+        lng: data.order_points[1].long,
+      });
+    }
     if (data.driver && data.status !== "rejected" && data.status !== "paid") {
       setMarker({
         id: data.driver.id,
@@ -115,6 +141,7 @@ const TrackMap = ({ data }: { data: Order }) => {
           options={{
             destination: destination,
             origin: origin,
+            waypoints: waypoints.length > 0 ? waypoints : undefined,
             travelMode: "DRIVING" as google.maps.TravelMode,
           }}
           callback={directionsCallback}
