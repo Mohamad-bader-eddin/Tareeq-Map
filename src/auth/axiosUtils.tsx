@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 
-const baseURL = "https://tareeq.app/api";
+const baseURL = "https://tareeq.app";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL,
