@@ -6,11 +6,18 @@ import {
   Marker,
 } from "@react-google-maps/api";
 import { useEffect, useRef, useState } from "react";
-import { Order } from "../types/order";
+import { Order, Route } from "../types/order";
 import pusher from "../../../pusherSetup";
 import { BirdEyePusher } from "../../birdEye/types";
 
-const TrackMap = ({ data }: { data: Order }) => {
+
+function removeLastZero(num : number) {
+  const str = num.toString();
+  const newStr = str.replace(/0$/, ''); // Remove the last zero if it exists
+  return newStr ? Number(newStr) : 0; // Convert back to number, return 0 if empty
+}
+
+const TrackMap = ({ data , routePoints}: { data: Order , routePoints : Route[] }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [directions, setDirections] = useState<any>(null); // state to store directions
   const [updateDirections, setUpdateDirections] = useState<boolean>(false);
@@ -24,6 +31,7 @@ const TrackMap = ({ data }: { data: Order }) => {
   const [waypoints, setWaypoints] = useState<google.maps.DirectionsWaypoint[]>(
     []
   );
+  const [routePointsMarkers, setRoutePointsMarkers] = useState<google.maps.LatLngLiteral[]>([]);
 
   useEffect(() => {
     // Define your origin and destination coordinates
@@ -66,6 +74,17 @@ const TrackMap = ({ data }: { data: Order }) => {
           lng: data.driver.current_long,
         },
       });
+    }
+    if(data.status === "paid" && routePoints){
+      for(let i =0; i< routePoints.length -1 ; i++){
+        setRoutePointsMarkers((prev) => [
+          ...prev,
+          {
+            lat : removeLastZero(routePoints[i].lat),
+            lng: removeLastZero(routePoints[i].long)
+          }
+        ])
+      }
     }
   }, [data]);
 
@@ -158,6 +177,16 @@ const TrackMap = ({ data }: { data: Order }) => {
             zIndex={10}
           />
         )}
+        {routePointsMarkers.length > 0 && routePointsMarkers.map((route,index) => (
+          <Marker 
+            key={index}
+            position={route}
+            icon={{
+              url: "/images/point.svg",
+            }}
+            zIndex={1}
+          />
+        ))}
       </GoogleMap>
     </LoadScript>
   );

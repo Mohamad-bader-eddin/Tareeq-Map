@@ -3,6 +3,7 @@ import TrackMap from "../components/TrackMap";
 import useOrderQuery from "../hooks/useOrderQuery";
 import { Backdrop } from "@mui/material";
 import Spinner from "../../../share/Spinner";
+import useOrderTrackDetailsQury from "../hooks/useOrderTrackDetailsQury";
 
 const OrderTrackContainer = () => {
   const location = useLocation();
@@ -11,9 +12,11 @@ const OrderTrackContainer = () => {
   const token = queryParams.get("token");
   sessionStorage.setItem("token", token as string);
   const { data, isLoading } = useOrderQuery(id as string);
+  const { data : orderDetails, isLoading : orderDetailsLoading } = useOrderTrackDetailsQury(id as string);
+  
   return (
     <>
-      {isLoading ? (
+      {isLoading || orderDetailsLoading ? (
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={isLoading}
@@ -21,7 +24,7 @@ const OrderTrackContainer = () => {
           <Spinner />
         </Backdrop>
       ) : (
-        <TrackMap data={data?.data.content} />
+        <TrackMap data={data?.data.content} routePoints={orderDetails?.data.content.route} />
       )}
     </>
   );

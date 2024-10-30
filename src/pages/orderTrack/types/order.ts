@@ -20,6 +20,12 @@ export type Order = {
     order_points: OrderPoint[];
 }
 
+export type Route = {
+    lat: number;
+    long: number;
+    points: string;
+}
+
 export type Driver = {
     id: string;
     name: string;
