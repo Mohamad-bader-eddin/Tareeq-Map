@@ -6,18 +6,19 @@ import {
   Marker,
 } from "@react-google-maps/api";
 import { useEffect, useRef, useState } from "react";
-import { Order, Route } from "../types/order";
+import { Order } from "../types/order";
 import pusher from "../../../pusherSetup";
 import { BirdEyePusher } from "../../birdEye/types";
+import useShapeDecode from "../hooks/useShapeDecode";
 
 
-function removeLastZero(num : number) {
-  const str = num.toString();
-  const newStr = str.replace(/0$/, ''); // Remove the last zero if it exists
-  return newStr ? Number(newStr) : 0; // Convert back to number, return 0 if empty
-}
+// function removeLastZero(num : number) {
+//   const str = num.toString();
+//   const newStr = str.replace(/0$/, ''); // Remove the last zero if it exists
+//   return newStr ? Number(newStr) : 0; // Convert back to number, return 0 if empty
+// }
 
-const TrackMap = ({ data , routePoints}: { data: Order , routePoints : Route[] }) => {
+const TrackMap = ({ data , routePoints}: { data: Order , routePoints : string}) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [directions, setDirections] = useState<any>(null); // state to store directions
   const [updateDirections, setUpdateDirections] = useState<boolean>(false);
@@ -32,7 +33,9 @@ const TrackMap = ({ data , routePoints}: { data: Order , routePoints : Route[] }
     []
   );
   const [routePointsMarkers, setRoutePointsMarkers] = useState<google.maps.LatLngLiteral[]>([]);
-
+  const {decode} = useShapeDecode()
+  const trackPoints = decode(routePoints)
+  
   useEffect(() => {
     // Define your origin and destination coordinates
     if (data.order_points.length > 2) {
@@ -76,12 +79,12 @@ const TrackMap = ({ data , routePoints}: { data: Order , routePoints : Route[] }
       });
     }
     if(data.status === "paid" && routePoints){
-      for(let i =0; i< routePoints.length -1 ; i++){
+      for(let i =0; i< trackPoints.length -1 ; i++){        
         setRoutePointsMarkers((prev) => [
           ...prev,
           {
-            lat : removeLastZero(routePoints[i].lat),
-            lng: removeLastZero(routePoints[i].long)
+            lat : trackPoints[i][0],
+            lng: trackPoints[i][1]
           }
         ])
       }
