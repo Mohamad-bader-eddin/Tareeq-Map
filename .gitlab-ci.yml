@@ -1,0 +1,38 @@
+.init_ssh: &init_ssh |
+  eval $(ssh-agent -s)
+  echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  mkdir -p ~/.ssh
+  chmod 700 ~/.ssh
+  ssh-keyscan tareeq.app >> ~/.ssh/known_hosts
+  chmod 644 ~/.ssh/known_hosts
+stages:
+  - build
+  - deploy
+
+# Cache node_modules to speed up builds
+cache:
+  paths:
+    - node_modules/
+
+# Build the project
+build:
+  stage: build
+  image: node:18
+  script:
+    - npm install # Install dependencies
+    - npm run build # Build the production version of the app
+  artifacts:
+    paths:
+      - dist/ # Keep the build output
+
+# Deploy to VPS
+deploy:
+  stage: deploy
+  script:
+    - *init_ssh
+    - echo "Deploying to VPS"
+    - echo $SERVER_USER@$SERVER_IP:$DEV_PATH
+    - scp -r dist/* $SERVER_USER@$SERVER_IP:$DEV_PATH
+    # - ssh $SERVER_USER@$SERVER_IP "sudo systemctl restart nginx" # Restart Nginx to pick up changes
+  only:
+    - dev
