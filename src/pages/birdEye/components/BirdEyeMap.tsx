@@ -4,10 +4,13 @@ import {
   LoadScript,
   Marker,
 } from "@react-google-maps/api";
-import { BirdEye, BirdEyePusher } from "../types";
+import { BirdEye, BirdEyePusher, DriverSearchForm } from "../types";
 import { useEffect, useRef, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import pusher from "../../../pusherSetup";
+import { useFormik } from "formik";
+import AutocompleteInput from "../../../share/autoComplete/AutocompleteInput";
+import { DEFAULT_CENTER, DEFAULT_ZOOM } from "../constant";
 
 const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
   const [selectedMarkers, setSelectedMarkers] = useState<Markers[]>([]);
@@ -21,6 +24,53 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
     lat: 33.513674,
     lng: 36.276526,
   });
+  // add search field *****
+  const [highlightedDriverId, setHighlightedDriverId] = useState<string | null>(
+    null,
+  );
+  const driverOptions = selectedMarkers.map((driver) => ({
+    id: driver.id,
+    name: driver.info,
+  }));
+  const formik = useFormik<DriverSearchForm>({
+    initialValues: {
+      driver: null,
+    },
+    onSubmit: () => {},
+  });
+
+  useEffect(() => {
+    const selected = formik.values.driver;
+
+    // If search cleared
+    if (!selected) {
+      if (map) {
+        map.panTo(DEFAULT_CENTER);
+        map.setZoom(DEFAULT_ZOOM);
+      }
+
+      setHighlightedDriverId(null);
+      return;
+    }
+
+    const driver = selectedMarkers.find(
+      (m) => m.id === formik.values.driver?.id,
+    );
+
+    if (!driver) return;
+
+    setHighlightedDriverId(driver.id);
+
+    if (map) {
+      map.panTo(driver.position);
+      map.setZoom(17);
+    }
+
+    setTimeout(() => {
+      setHighlightedDriverId(null);
+    }, 5000);
+  }, [formik.values.driver]);
+  // ****************
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onMapLoad = (mapInstance: any) => {
     setMap(mapInstance);
@@ -82,44 +132,51 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
   }, [movedMarker]);
 
   return (
-    <LoadScript googleMapsApiKey="AIzaSyCiyuZuf6jsA7mtfN_Q25tGuPEJyh4zTZA">
-      <GoogleMap
-        onLoad={onMapLoad}
-        center={center}
-        zoom={zoom}
-        mapContainerStyle={{ height: "400px", width: "100%" }}
-      >
-        {selectedMarkers.map((marker) => (
-          <Marker
-            key={marker.id}
-            position={marker.position}
-            onClick={() => setSelectedMarker(marker)}
-            icon={
-              marker.orderNumber
-                ? {
-                    url: "/images/blueMarker.svg",
-                  }
-                : {
-                    url: "/images/greenMarker.svg",
-                  }
-            }
-          >
-            {selectedMarker?.id === marker.id && (
-              <InfoWindow onCloseClick={() => setSelectedMarker(null)}>
-                <Box sx={{ margin: "2px" }}>
-                  <Typography variant="body1">{marker.info}</Typography>
-                  {marker.orderNumber ? (
-                    <Typography variant="body1">
-                      Order NO. {marker.orderNumber}
-                    </Typography>
-                  ) : null}
-                </Box>
-              </InfoWindow>
-            )}
-          </Marker>
-        ))}
-      </GoogleMap>
-    </LoadScript>
+    <>
+      <AutocompleteInput
+        options={driverOptions}
+        label="Search Driver"
+        name="driver"
+        formik={formik}
+        loading={false}
+      />
+      <LoadScript googleMapsApiKey="AIzaSyCiyuZuf6jsA7mtfN_Q25tGuPEJyh4zTZA">
+        <GoogleMap
+          onLoad={onMapLoad}
+          center={center}
+          zoom={zoom}
+          mapContainerStyle={{ height: "400px", width: "100%" }}
+        >
+          {selectedMarkers.map((marker) => (
+            <Marker
+              key={marker.id}
+              position={marker.position}
+              onClick={() => setSelectedMarker(marker)}
+              icon={
+                highlightedDriverId === marker.id
+                  ? { url: "/images/redMarker.svg" }
+                  : marker.orderNumber
+                    ? { url: "/images/blueMarker.svg" }
+                    : { url: "/images/greenMarker.svg" }
+              }
+            >
+              {selectedMarker?.id === marker.id && (
+                <InfoWindow onCloseClick={() => setSelectedMarker(null)}>
+                  <Box sx={{ margin: "2px" }}>
+                    <Typography variant="body1">{marker.info}</Typography>
+                    {marker.orderNumber ? (
+                      <Typography variant="body1">
+                        Order NO. {marker.orderNumber}
+                      </Typography>
+                    ) : null}
+                  </Box>
+                </InfoWindow>
+              )}
+            </Marker>
+          ))}
+        </GoogleMap>
+      </LoadScript>
+    </>
   );
 };
 

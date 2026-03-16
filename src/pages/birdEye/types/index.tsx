@@ -17,3 +17,10 @@ export type BirdEyePusher = {
     order_id?: number;
   };
 };
+
+export type DriverSearchForm = {
+  driver: {
+    id: string;
+    name: string;
+  } | null;
+};
