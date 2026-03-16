@@ -132,7 +132,7 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
   }, [movedMarker]);
 
   return (
-    <>
+    <Box sx={{ pt: "20px" }}>
       <AutocompleteInput
         options={driverOptions}
         label="Search Driver"
@@ -176,7 +176,7 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
           ))}
         </GoogleMap>
       </LoadScript>
-    </>
+    </Box>
   );
 };
 
