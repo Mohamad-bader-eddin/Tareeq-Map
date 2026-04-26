@@ -24,10 +24,6 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
     lat: 33.513674,
     lng: 36.276526,
   });
-  // add search field *****
-  const [highlightedDriverId, setHighlightedDriverId] = useState<string | null>(
-    null,
-  );
   const driverOptions = selectedMarkers.map((driver) => ({
     id: driver.id,
     name: driver.info,
@@ -49,7 +45,6 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
         map.setZoom(DEFAULT_ZOOM);
       }
 
-      setHighlightedDriverId(null);
       return;
     }
 
@@ -59,16 +54,10 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
 
     if (!driver) return;
 
-    setHighlightedDriverId(driver.id);
-
     if (map) {
       map.panTo(driver.position);
       map.setZoom(17);
     }
-
-    setTimeout(() => {
-      setHighlightedDriverId(null);
-    }, 5000);
   }, [formik.values.driver]);
   // ****************
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -153,11 +142,9 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
               position={marker.position}
               onClick={() => setSelectedMarker(marker)}
               icon={
-                highlightedDriverId === marker.id
-                  ? { url: "/images/redMarker.svg" }
-                  : marker.orderNumber
-                    ? { url: "/images/blueMarker.svg" }
-                    : { url: "/images/greenMarker.svg" }
+                marker.orderNumber
+                  ? { url: "/images/blueMarker.svg" }
+                  : { url: "/images/greenMarker.svg" }
               }
             >
               {selectedMarker?.id === marker.id && (
