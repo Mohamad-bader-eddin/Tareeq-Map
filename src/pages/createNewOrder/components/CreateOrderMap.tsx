@@ -1,4 +1,4 @@
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { GoogleMap, Marker } from "@react-google-maps/api";
 import { Pin } from "../types/createOrderType";
 import { useEffect, useState } from "react";
 import useSearchPointQuery from "../hooks/useSearchPointQuery";
@@ -7,6 +7,7 @@ import Spinner from "../../../share/Spinner";
 import { getPoint } from "../utils/getPoint";
 import usePointValidateQuery from "../hooks/usePointValidateQuery";
 import { regex } from "../constant";
+import { useGoogleMaps } from "../../../share/hooks/useGoogleMaps";
 
 const CreateOrderMap = ({
   marker,
@@ -32,6 +33,7 @@ const CreateOrderMap = ({
   const onMapLoad = (mapInstance: any) => {
     setMap(mapInstance);
   };
+  const { isLoaded } = useGoogleMaps();
   useEffect(() => {
     if (placeId) {
       refetch();
@@ -54,7 +56,7 @@ const CreateOrderMap = ({
               setOpenAlert(false);
             }
           },
-        }
+        },
       );
       setMarker({ position: { lat: centerPoint.lat, lng: centerPoint.long } });
       setAddress(addressFromSearch ? addressFromSearch : centerPoint.address);
@@ -82,7 +84,7 @@ const CreateOrderMap = ({
             setOpenAlert(false);
           }
         },
-      }
+      },
     );
     setMarker({
       position: {
@@ -112,7 +114,7 @@ const CreateOrderMap = ({
             // console.log("Address:", address);
           }
         }
-      }
+      },
     );
   };
   return (
@@ -130,7 +132,9 @@ const CreateOrderMap = ({
           <Spinner />
         </Box>
       ) : null}
-      <LoadScript googleMapsApiKey="AIzaSyCiyuZuf6jsA7mtfN_Q25tGuPEJyh4zTZA">
+      {!isLoaded ? (
+        <Spinner />
+      ) : (
         <GoogleMap
           onLoad={onMapLoad}
           center={center}
@@ -140,7 +144,7 @@ const CreateOrderMap = ({
         >
           <Marker position={marker.position} />
         </GoogleMap>
-      </LoadScript>
+      )}
       {openAlert ? (
         <Alert
           sx={{ position: "absolute", width: "250px", bottom: "10px" }}

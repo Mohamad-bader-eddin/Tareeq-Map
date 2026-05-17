@@ -1,6 +1,5 @@
 import {
   GoogleMap,
-  LoadScript,
   // DirectionsService,
   // DirectionsRenderer,
   Marker,
@@ -12,36 +11,43 @@ import pusher from "../../../pusherSetup";
 import { BirdEyePusher } from "../../birdEye/types";
 import useShapeDecode from "../hooks/useShapeDecode";
 import useConvertToMapPointType from "../hooks/useConvertToMapPointType";
-
+import { useGoogleMaps } from "../../../share/hooks/useGoogleMaps";
+import Spinner from "../../../share/Spinner";
 
 function removeLastZero(num: number) {
   const str = num.toString();
-  const newStr = str.replace(/0$/, ''); // Remove the last zero if it exists
+  const newStr = str.replace(/0$/, ""); // Remove the last zero if it exists
   return newStr ? Number(newStr) : 0; // Convert back to number, return 0 if empty
 }
 
-const TrackMap = ({ data, routePoints, shape }: { data: Order, routePoints: Route[], shape: string }) => {
+const TrackMap = ({
+  data,
+  routePoints,
+  shape,
+}: {
+  data: Order;
+  routePoints: Route[];
+  shape: string;
+}) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   // const [directions, setDirections] = useState<any>(null); // state to store directions
   // const [updateDirections, setUpdateDirections] = useState<boolean>(false);
   const [marker, setMarker] = useState<Markers | null>(null);
   const [driverMarker, setDriverMarker] = useState<Markers | null>(null);
   const [origin, setOrigin] = useState<Markers>(null!);
-  const [destination, setDestination] = useState<Markers>(
-    null!
-  );
-  const [waypoints, setWaypoints] = useState<Markers[]>(
-    []
-  );
+  const [destination, setDestination] = useState<Markers>(null!);
+  const [waypoints, setWaypoints] = useState<Markers[]>([]);
   const intervalRef = useRef<number | null>(null);
   // const [waypoints, setWaypoints] = useState<google.maps.DirectionsWaypoint[]>(
   //   []
   // );
-  const [routePointsMarkers, setRoutePointsMarkers] = useState<google.maps.LatLngLiteral[]>([]);
-  const { decode } = useShapeDecode()
-  const decodeTrackPoints = decode(shape)
-  const { convertToMapPoint } = useConvertToMapPointType()
-  const trackPoints = convertToMapPoint(decodeTrackPoints)
+  const [routePointsMarkers, setRoutePointsMarkers] = useState<
+    google.maps.LatLngLiteral[]
+  >([]);
+  const { decode } = useShapeDecode();
+  const decodeTrackPoints = decode(shape);
+  const { convertToMapPoint } = useConvertToMapPointType();
+  const trackPoints = convertToMapPoint(decodeTrackPoints);
 
   useEffect(() => {
     // Define your origin and destination coordinates
@@ -51,14 +57,14 @@ const TrackMap = ({ data, routePoints, shape }: { data: Order, routePoints: Rout
         position: {
           lat: data.order_points[0].lat,
           lng: data.order_points[0].long,
-        }
+        },
       });
       setDestination({
         id: String.fromCharCode(65 + data.order_points.length),
         position: {
           lat: data.order_points[data.order_points.length - 1].lat,
           lng: data.order_points[data.order_points.length - 1].long,
-        }
+        },
       });
       for (let i = 1; i <= data.order_points.length - 2; i++) {
         setWaypoints((prev) => [
@@ -78,14 +84,14 @@ const TrackMap = ({ data, routePoints, shape }: { data: Order, routePoints: Rout
         position: {
           lat: data.order_points[0].lat,
           lng: data.order_points[0].long,
-        }
+        },
       });
       setDestination({
         id: String.fromCharCode(66),
         position: {
           lat: data.order_points[1].lat,
           lng: data.order_points[1].long,
-        }
+        },
       });
     }
     // if (data.order_points.length > 2) {
@@ -134,9 +140,9 @@ const TrackMap = ({ data, routePoints, shape }: { data: Order, routePoints: Rout
           ...prev,
           {
             lat: removeLastZero(routePoints[i].lat),
-            lng: removeLastZero(routePoints[i].long)
-          }
-        ])
+            lng: removeLastZero(routePoints[i].long),
+          },
+        ]);
       }
     }
   }, [data]);
@@ -144,12 +150,16 @@ const TrackMap = ({ data, routePoints, shape }: { data: Order, routePoints: Rout
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [map, setMap] = useState<any>(null);
   const [zoom, setZoom] = useState(13);
-  const [center, setCenter] = useState<google.maps.LatLngLiteral>({ lat: 33.513674, lng: 36.276526 });
+  const [center, setCenter] = useState<google.maps.LatLngLiteral>({
+    lat: 33.513674,
+    lng: 36.276526,
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onMapLoad = (mapInstance: any) => {
     setMap(mapInstance);
   };
+  const { isLoaded } = useGoogleMaps();
 
   // Callback function for the DirectionsService response
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -201,15 +211,18 @@ const TrackMap = ({ data, routePoints, shape }: { data: Order, routePoints: Rout
   }, [driverMarker]);
 
   return (
-    <LoadScript googleMapsApiKey="AIzaSyCiyuZuf6jsA7mtfN_Q25tGuPEJyh4zTZA">
-      <GoogleMap
-        mapContainerStyle={{ height: "400px", width: "100%" }}
-        center={center}
-        onLoad={onMapLoad}
-        zoom={zoom}
-      >
-        {/* DirectionsService for fetching directions */}
-        {/* <DirectionsService
+    <>
+      {!isLoaded ? (
+        <Spinner />
+      ) : (
+        <GoogleMap
+          mapContainerStyle={{ height: "400px", width: "100%" }}
+          center={center}
+          onLoad={onMapLoad}
+          zoom={zoom}
+        >
+          {/* DirectionsService for fetching directions */}
+          {/* <DirectionsService
           options={{
             destination: destination,
             origin: origin,
@@ -218,83 +231,80 @@ const TrackMap = ({ data, routePoints, shape }: { data: Order, routePoints: Rout
           }}
           callback={directionsCallback}
         /> */}
-        {origin && (
-          <Marker
-            position={origin.position}
-            label={
-              {
+          {origin && (
+            <Marker
+              position={origin.position}
+              label={{
                 text: origin.id,
-                color: 'white',
-                fontSize: '18px',
-              }
-            }
-            zIndex={10}
-          />
-        )}
+                color: "white",
+                fontSize: "18px",
+              }}
+              zIndex={10}
+            />
+          )}
 
-        {destination && (
-          <Marker
-            position={destination.position}
-            label={
-              {
+          {destination && (
+            <Marker
+              position={destination.position}
+              label={{
                 text: destination.id,
-                color: 'white',
-                fontSize: '18px',
-              }
-            }
-            zIndex={10}
-          />
-        )}
+                color: "white",
+                fontSize: "18px",
+              }}
+              zIndex={10}
+            />
+          )}
 
-        {waypoints.length > 1 && waypoints.map((way,index) => (
-          <Marker
-          key={index}
-          position={way.position}
-          label={
-            {
-              text: way.id,
-              color: 'white',
-              fontSize: '18px',
-            }
-          }
-          zIndex={10}
-        />
-        ))}
+          {waypoints.length > 1 &&
+            waypoints.map((way, index) => (
+              <Marker
+                key={index}
+                position={way.position}
+                label={{
+                  text: way.id,
+                  color: "white",
+                  fontSize: "18px",
+                }}
+                zIndex={10}
+              />
+            ))}
 
-        {/* Polyline component */}
-        <Polyline
-          path={trackPoints}
-          options={{
-            strokeColor: '#61abf4',
-            strokeOpacity: 1.0,
-            strokeWeight: 5,
-            zIndex: 100
-          }}
-        />
-
-        {/* DirectionsRenderer for displaying directions on the map */}
-        {/* {directions && <DirectionsRenderer directions={directions} />} */}
-        {marker && (
-          <Marker
-            position={marker.position}
-            icon={{
-              url: "/images/car.svg",
+          {/* Polyline component */}
+          <Polyline
+            path={trackPoints}
+            options={{
+              strokeColor: "#61abf4",
+              strokeOpacity: 1.0,
+              strokeWeight: 5,
+              zIndex: 100,
             }}
-            zIndex={10}
           />
-        )}
-        {routePointsMarkers.length > 0 && routePointsMarkers.map((route, index) => (
-          <Marker
-            key={index}
-            position={route}
-            icon={{
-              url: "/images/point.svg",
-            }}
-            zIndex={1}
-          />
-        ))}
-      </GoogleMap>
-    </LoadScript>
+
+          {/* DirectionsRenderer for displaying directions on the map */}
+          {/* {directions && <DirectionsRenderer directions={directions} />} */}
+          {marker && (
+            <Marker
+              position={marker.position}
+              icon={{
+                url: "/images/car.svg",
+              }}
+              zIndex={10}
+            />
+          )}
+          {routePointsMarkers.length > 0 &&
+            routePointsMarkers.map((route, index) => (
+              <Marker
+                key={index}
+                position={route}
+                icon={{
+                  url: "/images/point.svg",
+                }}
+                zIndex={1}
+              />
+            ))}
+        </GoogleMap>
+      )}
+    </>
   );
 };
 

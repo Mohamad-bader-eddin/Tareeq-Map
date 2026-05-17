@@ -1,7 +1,9 @@
-import { GoogleMap, LoadScript, Marker, Polygon } from "@react-google-maps/api";
+import { GoogleMap, Marker, Polygon } from "@react-google-maps/api";
 import { useState } from "react";
 import { FormikProps } from "formik";
 import { Location, Markers } from "../types/AddPolygonsFormType";
+import { useGoogleMaps } from "../../../../../share/hooks/useGoogleMaps";
+import Spinner from "../../../../../share/Spinner";
 
 const PolygonsMap = <T extends Record<string, unknown>>({
   formik,
@@ -25,7 +27,7 @@ const PolygonsMap = <T extends Record<string, unknown>>({
       locations.push({
         latitude: loc.position.lat,
         longitude: loc.position.lng,
-      })
+      }),
     );
     locations.push({
       latitude: e.latLng?.lat() as number,
@@ -40,33 +42,39 @@ const PolygonsMap = <T extends Record<string, unknown>>({
     setSelectedMarkers([...selectedMarkers]);
   };
 
+  const { isLoaded } = useGoogleMaps();
+
   return (
-    <LoadScript googleMapsApiKey="AIzaSyCiyuZuf6jsA7mtfN_Q25tGuPEJyh4zTZA">
-      <GoogleMap
-        center={{ lat: 33.513674, lng: 36.276526 }}
-        zoom={13}
-        mapContainerStyle={{ height: "400px", width: "100%" }}
-        onClick={handleMapClick}
-      >
-        {selectedMarkers.map((marker) => (
-          <Marker
-            key={marker.id}
-            position={marker.position}
-            onClick={() => handleMarkerClick(marker.position)}
-          ></Marker>
-        ))}
-        <Polygon
-          paths={selectedMarkers.map((path) => path.position)}
-          options={{
-            strokeColor: "#FF0000",
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: "#FF0000",
-            fillOpacity: 0.35,
-          }}
-        />
-      </GoogleMap>
-    </LoadScript>
+    <>
+      {!isLoaded ? (
+        <Spinner />
+      ) : (
+        <GoogleMap
+          center={{ lat: 33.513674, lng: 36.276526 }}
+          zoom={13}
+          mapContainerStyle={{ height: "400px", width: "100%" }}
+          onClick={handleMapClick}
+        >
+          {selectedMarkers.map((marker) => (
+            <Marker
+              key={marker.id}
+              position={marker.position}
+              onClick={() => handleMarkerClick(marker.position)}
+            ></Marker>
+          ))}
+          <Polygon
+            paths={selectedMarkers.map((path) => path.position)}
+            options={{
+              strokeColor: "#FF0000",
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: "#FF0000",
+              fillOpacity: 0.35,
+            }}
+          />
+        </GoogleMap>
+      )}
+    </>
   );
 };
 

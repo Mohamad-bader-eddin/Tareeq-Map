@@ -1,9 +1,4 @@
-import {
-  GoogleMap,
-  InfoWindow,
-  LoadScript,
-  Marker,
-} from "@react-google-maps/api";
+import { GoogleMap, InfoWindow, Marker } from "@react-google-maps/api";
 import { BirdEye, BirdEyePusher, DriverSearchForm } from "../types";
 import { useEffect, useRef, useState } from "react";
 import { Box, Typography } from "@mui/material";
@@ -11,6 +6,8 @@ import pusher from "../../../pusherSetup";
 import { useFormik } from "formik";
 import AutocompleteInput from "../../../share/autoComplete/AutocompleteInput";
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from "../constant";
+import { useGoogleMaps } from "../../../share/hooks/useGoogleMaps";
+import Spinner from "../../../share/Spinner";
 
 const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
   const [selectedMarkers, setSelectedMarkers] = useState<Markers[]>([]);
@@ -64,6 +61,7 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
   const onMapLoad = (mapInstance: any) => {
     setMap(mapInstance);
   };
+  const { isLoaded } = useGoogleMaps();
   useEffect(() => {
     const markers: Markers[] = data?.map((marker) => ({
       id: marker.id,
@@ -129,7 +127,9 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
         formik={formik}
         loading={false}
       />
-      <LoadScript googleMapsApiKey="AIzaSyCiyuZuf6jsA7mtfN_Q25tGuPEJyh4zTZA">
+      {!isLoaded ? (
+        <Spinner />
+      ) : (
         <GoogleMap
           onLoad={onMapLoad}
           center={center}
@@ -162,7 +162,7 @@ const BirdEyeMap = ({ data }: { data: BirdEye[] }) => {
             </Marker>
           ))}
         </GoogleMap>
-      </LoadScript>
+      )}
     </Box>
   );
 };
